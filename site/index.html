@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Per My Last Webhook — Enterprise Integrations, 90s Vibes.</title>
+<meta name="description" content="Rich Teams notifications from Jenkins, GitHub Actions, GitLab, Azure Pipelines, Buildkite, CircleCI, and Bitbucket. The successor to deprecated Office 365 Connectors." />
+<link rel="icon" href="favicon.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta property="og:title" content="Per My Last Webhook — DevOps Connector for Teams" />
+<meta property="og:image" content="og-image.png" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/">
+    <img src="logo.png" alt="Per My Last Webhook logo" width="32" height="32" />
+    <span>Per My Last Webhook</span>
+  </a>
+  <nav class="site-nav">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#install">Install</a>
+    <a href="#faq">FAQ</a>
+    <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-text">
+      <span class="eyebrow">// Enterprise integrations · 90s vibes</span>
+      <h1>Pipeline events,<br />in your Teams channel.</h1>
+      <p class="lede">
+        A drop-in replacement for the deprecated Office 365 Connectors.
+        Normalize webhook events from seven CI platforms into one Teams app,
+        with rate limiting, retries, and an audit trail.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="{{INSTALL_URL}}">Install for Teams</a>
+        <a class="btn btn-ghost" href="{{GITHUB_URL}}">View on GitHub</a>
+      </div>
+      <p class="trust">
+        Multi-tenant Entra OAuth · audit log · per-org rate limits ·
+        encrypted secrets at rest
+      </p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="#15b9a7" />
+            <stop offset="100%" stop-color="#5d40c9" />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="360" height="240" rx="16" fill="url(#g)" opacity="0.08" />
+        <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="currentColor">
+          <text x="24" y="48">Jenkins</text>
+          <text x="24" y="86">GitHub Actions</text>
+          <text x="24" y="124">GitLab CI</text>
+          <text x="24" y="162">Azure Pipelines</text>
+          <text x="24" y="200">Buildkite · CircleCI · Bitbucket</text>
+        </g>
+        <path d="M 160 48 Q 220 48 220 120 T 280 120"
+              stroke="url(#g)" stroke-width="2" fill="none" />
+        <path d="M 160 86 Q 220 86 220 120 T 280 120"
+              stroke="url(#g)" stroke-width="2" fill="none" />
+        <path d="M 160 124 Q 220 124 220 120 T 280 120"
+              stroke="url(#g)" stroke-width="2" fill="none" />
+        <path d="M 160 162 Q 220 162 220 120 T 280 120"
+              stroke="url(#g)" stroke-width="2" fill="none" />
+        <path d="M 200 200 Q 240 200 240 120 T 280 120"
+              stroke="url(#g)" stroke-width="2" fill="none" />
+        <circle cx="290" cy="120" r="22" fill="url(#g)" />
+        <text x="290" y="125" text-anchor="middle" font-family="system-ui, sans-serif"
+              font-size="12" font-weight="600" fill="white">Teams</text>
+      </svg>
+    </div>
+  </section>
+
+  <section id="features" class="features">
+    <h2>What you get</h2>
+    <div class="feature-grid">
+      <article data-title="adapters.dll">
+        <h3>Seven CI platforms</h3>
+        <p>
+          Jenkins, GitHub Actions, GitLab CI, Azure Pipelines, Buildkite,
+          CircleCI, and Bitbucket Pipelines, normalized to one common event
+          model. Add another platform by writing one adapter.
+        </p>
+      </article>
+      <article data-title="delivery.sys">
+        <h3>Two delivery modes</h3>
+        <p>
+          Stateless Teams Workflows webhooks, or the Bot Framework with
+          in-place card updates so one card flips
+          <code>started → success</code> rather than spawning two.
+        </p>
+      </article>
+      <article data-title="oauth.exe">
+        <h3>Multi-tenant OAuth</h3>
+        <p>
+          Microsoft Entra Bearer tokens on the management plane.
+          Admin-consent install flow with HMAC-signed state. Per-tenant
+          isolation enforced at the data layer, not the UI.
+        </p>
+      </article>
+      <article data-title="approvals.bat">
+        <h3>Deployment approvals</h3>
+        <p>
+          Post an Approve / Reject card to a channel and pause the pipeline
+          until a human clicks. Decisions are idempotent and audit-logged
+          with the decider's UPN.
+        </p>
+      </article>
+      <article data-title="ratelimit.dll">
+        <h3>Built to survive load</h3>
+        <p>
+          Per-organization token-bucket rate limits with optional Redis for
+          accurate multi-instance throttling. Exponential-backoff retries on
+          transient Teams 5xx. Honest 207 responses on partial fan-out.
+        </p>
+      </article>
+      <article data-title="audit.log">
+        <h3>Audit + governance</h3>
+        <p>
+          Every mutation lands in a 90-day TTL'd audit log with actor UPN,
+          source IP, and target entity. Browse it in the admin UI or fetch
+          via the API.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section id="how" class="how">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li>
+        <div class="step-n">1</div>
+        <h3>Install from the Teams Store</h3>
+        <p>
+          A Microsoft 365 admin grants tenant-wide consent. The
+          <code>installations</code> record is created; users in the tenant
+          can now manage subscriptions.
+        </p>
+      </li>
+      <li>
+        <div class="step-n">2</div>
+        <h3>Create a subscription</h3>
+        <p>
+          Pick a channel, paste a Teams Workflows webhook URL, choose a CI
+          platform. We hand you a per-subscription
+          <code>ingestUrl</code> with auth baked into the path.
+        </p>
+      </li>
+      <li>
+        <div class="step-n">3</div>
+        <h3>Point your CI at the URL</h3>
+        <p>
+          Use your platform's native webhook UI. No relay, no plugin, no
+          deploy. Events start flowing immediately; the
+          <em>Test</em> button verifies end-to-end in one click.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="screenshots">
+    <h2>Admin UI</h2>
+    <p class="muted">
+      A small React + MSAL SPA the Function App serves at
+      <code>/api/ui/</code>. Light or dark, subscription CRUD, approval
+      inbox, audit log, billing.
+    </p>
+    <figure>
+      <img src="screenshot-admin.svg" alt="Admin UI showing the subscriptions page" />
+      <figcaption>Subscriptions page with the in-context Test button.</figcaption>
+    </figure>
+  </section>
+
+  <section id="install" class="install">
+    <h2>Install</h2>
+    <p>
+      The simplest path is the
+      <a href="{{INSTALL_URL}}">Teams Store listing</a>. If you'd rather
+      self-host, the source is on
+      <a href="{{GITHUB_URL}}">GitHub</a> with Bicep templates that stand up
+      the full Azure footprint (Functions, Cosmos, Key Vault, Application
+      Insights) and a smoke-gated CI release path.
+    </p>
+    <pre><code>git clone {{GITHUB_URL}}
+cd teams-devops-connector
+./infra/deploy.ps1 -ResourceGroup my-rg -Location eastus \
+                   -BaseName mytdc -Environment dev</code></pre>
+    <p class="muted">
+      Self-hosting is fully supported and there is no licence fee for it.
+      The hosted plan only adds managed infrastructure, billing, and a
+      status page.
+    </p>
+  </section>
+
+  <section id="faq" class="faq">
+    <h2>FAQ</h2>
+    <details open>
+      <summary>Why is this needed? Doesn't Teams have connectors built in?</summary>
+      <p>
+        Microsoft <a href="https://devblogs.microsoft.com/microsoft365dev/retirement-of-office-365-connectors-within-microsoft-teams/">deprecated</a>
+        the Office 365 Connectors for Microsoft Teams. Existing connectors
+        stop working in 2025; new ones cannot be created. This service is
+        the replacement.
+      </p>
+    </details>
+    <details>
+      <summary>Is my data safe?</summary>
+      <p>
+        Teams Workflows webhook URLs are stored encrypted in Azure Key
+        Vault. The management plane requires Entra Bearer tokens. Audit
+        entries record every mutation. See the
+        <a href="privacy/">Privacy Policy</a> for the full picture.
+      </p>
+    </details>
+    <details>
+      <summary>Which Microsoft 365 SKU do I need?</summary>
+      <p>
+        Anything that includes Teams and lets the tenant admin grant
+        application consent. Most Business and Enterprise SKUs qualify.
+      </p>
+    </details>
+    <details>
+      <summary>Do you offer SSO?</summary>
+      <p>
+        Yes. The admin UI uses MSAL against your tenant's Entra ID; users
+        sign in with their existing Microsoft 365 account.
+      </p>
+    </details>
+    <details>
+      <summary>Can I self-host it?</summary>
+      <p>
+        Yes. The entire codebase is open. Bicep templates and a deploy
+        script stand up the full Azure footprint in one command.
+      </p>
+    </details>
+    <details>
+      <summary>What's on the roadmap?</summary>
+      <p>
+        Private-network ingestion, more delivery channels (Slack, Discord),
+        and richer per-subscription branding. See the
+        <a href="{{GITHUB_URL}}">GitHub repository</a> for the current
+        backlog.
+      </p>
+    </details>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="foot-cols">
+    <div>
+      <strong>DevOps Connector</strong>
+      <p class="muted small">
+        © {{YEAR}} {{COMPANY_NAME}}. Microsoft Teams and Microsoft 365 are
+        trademarks of Microsoft Corporation. This service is not endorsed
+        by or affiliated with Microsoft.
+      </p>
+    </div>
+    <div>
+      <strong>Product</strong>
+      <a href="#features">Features</a>
+      <a href="#install">Install</a>
+      <a href="{{STATUS_PAGE_URL}}">Status</a>
+    </div>
+    <div>
+      <strong>Legal</strong>
+      <a href="privacy/">Privacy</a>
+      <a href="terms/">Terms</a>
+      <a href="mailto:{{CONTACT_EMAIL}}">Contact</a>
+    </div>
+    <div>
+      <strong>Code</strong>
+      <a href="{{GITHUB_URL}}">GitHub</a>
+      <a href="{{GITHUB_URL}}/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="{{GITHUB_URL}}/issues">Issues</a>
+    </div>
+  </div>
+</footer>
+
+<div class="taskbar">
+  <span class="start">▣ Start</span>
+  <span class="seg">PER MY LAST WEBHOOK</span>
+  <span class="seg">C:\WEBHOOKS\PROD</span>
+  <span class="clock">Status: Awaiting Reply · 200 OK</span>
+</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "permylastwebhook-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Marketing + setup site for Per My Last Webhook (permylastwebhook.com).",
+  "scripts": {
+    "site:build": "node scripts/fill-site-placeholders.mjs",
+    "deploy": ".deploy-venv/bin/python scripts/deploy_site.py"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

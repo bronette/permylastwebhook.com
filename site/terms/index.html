@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Terms of Service — DevOps Connector</title>
+<meta name="description" content="Terms of service for DevOps Connector for Microsoft Teams." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+<link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../">
+    <img src="../logo.png" alt="Per My Last Webhook logo" width="32" height="32" />
+    <span>Per My Last Webhook</span>
+  </a>
+  <nav class="site-nav">
+    <a href="../#features">Features</a>
+    <a href="../#install">Install</a>
+    <a href="../privacy/">Privacy</a>
+    <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<article class="legal">
+  <h1>Terms of Service</h1>
+  <p class="legal-meta">
+    <strong>Effective date:</strong> {{EFFECTIVE_DATE}}<br />
+    <strong>Operator:</strong> {{COMPANY_NAME}} ({{COMPANY_ADDRESS}})<br />
+    <strong>Contact:</strong> <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>
+  </p>
+
+  <h2>1. Acceptance</h2>
+  <p>
+    By installing <strong>DevOps Connector</strong> ("the Service") into a
+    Microsoft 365 tenant, or by using any administrative or webhook endpoint
+    of the Service, you ("Customer") agree to these Terms. If you are agreeing
+    on behalf of an organization, you represent that you have authority to
+    bind that organization, and "you" refers both to you individually and to
+    that organization.
+  </p>
+  <p>If you do not agree, do not install or use the Service.</p>
+
+  <h2>2. What the Service does</h2>
+  <p>
+    The Service receives webhook events from continuous-integration platforms
+    (such as Jenkins, GitHub Actions, GitLab CI, Azure Pipelines, Buildkite,
+    CircleCI, and Bitbucket Pipelines), normalizes them into a common event
+    model, and posts adaptive cards to one or more Microsoft Teams channels
+    using Microsoft Teams Workflows incoming webhooks or the Microsoft Bot
+    Framework.
+  </p>
+  <p>
+    The Service includes an administrative web UI, an HTTP management API,
+    and an optional billing integration for paid plans.
+  </p>
+
+  <h2>3. Your responsibilities</h2>
+  <p>You agree:</p>
+  <ul>
+    <li>To configure only Teams channels that you are authorized to post to.</li>
+    <li>To respect Microsoft's terms for Teams, Entra ID, and Bot Framework.</li>
+    <li>Not to use the Service to deliver content that is unlawful, harassing, defamatory, infringing, or that violates applicable export-control or sanctions law.</li>
+    <li>Not to attempt to bypass authentication, rate limits, or per-tenant isolation.</li>
+    <li>Not to reverse-engineer, decompile, or extract source code from the Service except to the extent applicable law forbids that restriction.</li>
+    <li>Not to use the Service to deliver spam, mass marketing, or unsolicited notifications to users who have not consented to receive them.</li>
+    <li>To keep your administrative credentials secure and notify us promptly of any suspected compromise.</li>
+  </ul>
+  <p>We may suspend or terminate access without notice for any breach of this section.</p>
+
+  <h2>4. Acceptable use limits</h2>
+  <p>
+    We enforce per-organization rate limits (default:
+    {{RATE_LIMIT_PER_MINUTE}} events per minute) to protect the shared
+    Service. Sustained traffic beyond your plan's limit may be throttled or
+    refused. Burst traffic that triggers our abuse detection may cause
+    temporary suspension while we investigate.
+  </p>
+
+  <h2>5. Data</h2>
+  <p>
+    How we handle your data is described in the
+    <a href="../privacy/">Privacy Policy</a>. The Privacy Policy is
+    incorporated into these Terms by reference.
+  </p>
+  <p>
+    You retain all rights in the data you transmit through the Service. You
+    grant us a limited, non-exclusive licence to process that data solely to
+    operate the Service on your behalf as described in the Privacy Policy.
+  </p>
+
+  <h2>6. Billing (paid plans only)</h2>
+  <p>If you subscribe to a paid plan:</p>
+  <ul>
+    <li>Pricing and billing cadence are as displayed in the admin UI billing page at the time you subscribe.</li>
+    <li>Payments are processed by Stripe, Inc. under Stripe's terms; we do not store payment instruments.</li>
+    <li>Subscriptions renew automatically until cancelled.</li>
+    <li>You may cancel at any time from the customer portal linked in the admin UI. Cancellation takes effect at the end of the current billing period; we do not pro-rate refunds for partial periods unless required by law.</li>
+    <li>We may change pricing on 30 days' notice. Continued use after a price change constitutes acceptance.</li>
+    <li>Late or failed payments may result in feature downgrade or suspension after a reasonable grace period.</li>
+  </ul>
+  <p>If billing is not enabled in your installation, this section does not apply.</p>
+
+  <h2>7. Service level</h2>
+  <p>
+    We aim to operate the Service with reasonable availability but
+    <strong>do not guarantee</strong> any specific uptime, throughput, or
+    latency. The Service is provided <strong>"as is" and "as available"</strong>,
+    without warranties of any kind, whether express, implied, or statutory,
+    including warranties of merchantability, fitness for a particular purpose,
+    non-infringement, or uninterrupted operation.
+  </p>
+  <p>
+    For status updates and known incidents, see
+    <a href="{{STATUS_PAGE_URL}}">{{STATUS_PAGE_URL}}</a>.
+  </p>
+
+  <h2>8. Beta and preview features</h2>
+  <p>
+    Features marked "beta", "preview", or "experimental" in the admin UI are
+    provided for evaluation and may be changed or removed at any time. Beta
+    features are not covered by any availability target.
+  </p>
+
+  <h2>9. Limitation of liability</h2>
+  <p>To the maximum extent permitted by law:</p>
+  <ul>
+    <li>{{COMPANY_NAME}} will not be liable for any indirect, incidental, special, consequential, or punitive damages, or for any loss of profits, revenue, data, or goodwill, arising out of or relating to the Service, even if advised of the possibility of such damages.</li>
+    <li>Our total aggregate liability arising out of or relating to the Service, regardless of theory of liability, will not exceed the greater of (a) the amounts you paid us for the Service in the <strong>12 months</strong> before the event giving rise to the claim, or (b) <strong>USD $100</strong>.</li>
+  </ul>
+  <p>
+    Some jurisdictions do not allow the exclusion or limitation of certain
+    damages; in those jurisdictions our liability is limited to the maximum
+    extent permitted by law.
+  </p>
+
+  <h2>10. Indemnification</h2>
+  <p>
+    You will indemnify, defend, and hold harmless {{COMPANY_NAME}} from and
+    against any third-party claim arising out of (a) your breach of these
+    Terms, (b) your use of the Service in violation of applicable law, or
+    (c) data you transmit through the Service that infringes a third party's
+    rights.
+  </p>
+
+  <h2>11. Termination</h2>
+  <ul>
+    <li><strong>By you:</strong> uninstall the Service from your Microsoft 365 tenant. Uninstall takes effect immediately.</li>
+    <li><strong>By us:</strong> we may suspend or terminate your access if you breach these Terms or if continued provision becomes commercially or legally unreasonable. We will provide at least 30 days' notice for non-breach termination.</li>
+  </ul>
+  <p>
+    On termination, the rights granted to you under these Terms cease. The
+    Privacy Policy continues to govern data retention and deletion.
+  </p>
+
+  <h2>12. Changes</h2>
+  <p>
+    We may update these Terms when our practices or the law change. The
+    <strong>Effective date</strong> above reflects the most recent revision.
+    Material changes will be announced in the admin UI at least 30 days
+    before they take effect. Continued use after the effective date of an
+    update constitutes acceptance.
+  </p>
+
+  <h2>13. Governing law and disputes</h2>
+  <p>
+    These Terms are governed by the laws of <strong>{{JURISDICTION}}</strong>,
+    without regard to its conflict-of-laws rules. The exclusive venue for any
+    dispute is the competent courts of <strong>{{VENUE}}</strong>, except
+    that either party may seek injunctive relief in any court of competent
+    jurisdiction.
+  </p>
+  <p>
+    If you are a consumer in a jurisdiction that grants you mandatory rights
+    to your local courts or governing law, those mandatory rights are not
+    affected.
+  </p>
+
+  <h2>14. Miscellaneous</h2>
+  <ul>
+    <li>These Terms, together with the Privacy Policy, constitute the entire agreement between you and {{COMPANY_NAME}} regarding the Service and supersede any prior agreements.</li>
+    <li>If any provision of these Terms is held unenforceable, the remaining provisions remain in force.</li>
+    <li>Failure to enforce any provision is not a waiver of it.</li>
+    <li>You may not assign these Terms without our written consent; we may assign them to an affiliate or to a successor in connection with a merger, acquisition, or sale of assets.</li>
+    <li>Notices to us: <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>. Notices to you: the admin email associated with your tenant's installation.</li>
+  </ul>
+
+  <h2>15. Contact</h2>
+  <p>
+    {{COMPANY_NAME}}<br />
+    {{COMPANY_ADDRESS}}<br />
+    <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>
+  </p>
+</article>
+
+<footer class="site-footer">
+  <div class="foot-cols">
+    <div>
+      <strong>DevOps Connector</strong>
+      <p class="muted small">© {{YEAR}} {{COMPANY_NAME}}.</p>
+    </div>
+    <div>
+      <strong>Product</strong>
+      <a href="../#features">Features</a>
+      <a href="../#install">Install</a>
+    </div>
+    <div>
+      <strong>Legal</strong>
+      <a href="../privacy/">Privacy</a>
+      <a href="../terms/">Terms</a>
+    </div>
+    <div>
+      <strong>Code</strong>
+      <a href="{{GITHUB_URL}}">GitHub</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

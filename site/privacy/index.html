@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Privacy Policy — DevOps Connector</title>
+<meta name="description" content="Privacy policy for DevOps Connector for Microsoft Teams." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+<link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../">
+    <img src="../logo.png" alt="Per My Last Webhook logo" width="32" height="32" />
+    <span>Per My Last Webhook</span>
+  </a>
+  <nav class="site-nav">
+    <a href="../#features">Features</a>
+    <a href="../#install">Install</a>
+    <a href="../terms/">Terms</a>
+    <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<article class="legal">
+  <h1>Privacy Policy</h1>
+  <p class="legal-meta">
+    <strong>Effective date:</strong> {{EFFECTIVE_DATE}}<br />
+    <strong>Operator:</strong> {{COMPANY_NAME}} ({{COMPANY_ADDRESS}})<br />
+    <strong>Contact:</strong> <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>
+  </p>
+
+  <h2>1. Who this applies to</h2>
+  <p>
+    This policy describes the data that <strong>DevOps Connector</strong> ("the
+    Service") collects when your Microsoft 365 organization installs and uses
+    it. The Service is operated by {{COMPANY_NAME}}.
+  </p>
+  <p>
+    If you have not installed the Service into your Microsoft 365 tenant, this
+    policy does not apply to you.
+  </p>
+
+  <h2>2. What we collect</h2>
+  <p>
+    The Service is a webhook relay: pipeline events from your CI tools enter
+    on one side, adaptive cards land in Microsoft Teams on the other. To do
+    that we process and store the following.
+  </p>
+
+  <h3>2.1 Tenant and identity data</h3>
+  <table>
+    <thead>
+      <tr><th>Data</th><th>Source</th><th>Why we have it</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Microsoft Entra tenant id</td>
+        <td>Bearer token <code>tid</code> claim</td>
+        <td>Multi-tenant scoping; ensures one customer cannot see another's data</td>
+      </tr>
+      <tr>
+        <td>User principal name (UPN) of the admin who installed the Service</td>
+        <td>Bearer token <code>preferred_username</code></td>
+        <td>Audit log attribution for sensitive actions</td>
+      </tr>
+      <tr>
+        <td>Admin consent timestamp and consenting user</td>
+        <td>Entra <code>/adminconsent</code> callback</td>
+        <td>Proof that an authorized admin granted access</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    We do <strong>not</strong> collect names, email addresses (beyond the UPN,
+    which usually contains one), phone numbers, or any other personal data
+    about end-users.
+  </p>
+
+  <h3>2.2 Subscription configuration</h3>
+  <p>For each subscription an admin creates, we store:</p>
+  <ul>
+    <li>A user-supplied subscription name (free-form, e.g. <code>#builds-team-a</code>).</li>
+    <li>
+      The Microsoft Teams Workflows webhook URL <strong>encrypted at rest</strong>
+      in Azure Key Vault. We never log it in plaintext and never expose it
+      through any API endpoint after creation.
+    </li>
+    <li>Optional filters: which pipelines to allow, which statuses to forward, an optional approver list.</li>
+    <li>The set of CI platforms enabled.</li>
+  </ul>
+
+  <h3>2.3 Build event metadata</h3>
+  <p>
+    When a CI pipeline emits an event, the Service receives a payload
+    describing the event (repository name, branch, commit SHA, author,
+    status, build URL, log URL). The Service:
+  </p>
+  <ul>
+    <li>Posts an adaptive card to your Teams channel using that data.</li>
+    <li>Discards the payload after a successful post. We do <strong>not</strong> persist build event payloads.</li>
+  </ul>
+  <p>The only event-related data we keep is an entry in the <strong>audit log</strong> (see 2.5).</p>
+
+  <h3>2.4 Bot Framework data (only if you enable the bot)</h3>
+  <p>If you install the optional Bot Framework integration, we additionally store:</p>
+  <ul>
+    <li>Teams channel ids and conversation references for channels where the bot is added.</li>
+    <li>Activity ids of cards the bot has posted, to support in-place updates.</li>
+  </ul>
+  <p>These records persist for the lifetime of the installation and are deleted on uninstall (see 7).</p>
+
+  <h3>2.5 Audit log</h3>
+  <p>
+    Every mutation on the management plane (creating, editing, deleting a
+    subscription; approving or rejecting a deployment) is appended to an
+    audit log entry containing: the actor's UPN or <code>"host-key"</code>,
+    the action name, the affected entity id, the source IP, and a timestamp.
+  </p>
+  <p>
+    Audit entries are stored for <strong>90 days</strong> then automatically
+    deleted by Cosmos DB TTL.
+  </p>
+
+  <h3>2.6 Billing data (only if billing is enabled)</h3>
+  <p>If your tenant subscribes to a paid plan via Stripe:</p>
+  <ul>
+    <li>We store your <strong>Stripe customer id</strong> and the <strong>plan tier</strong>.</li>
+    <li>
+      We do <strong>not</strong> store your credit card number, CVV, or any
+      other payment instrument. Stripe handles all payment data directly; we
+      only receive identifiers and lifecycle events.
+    </li>
+  </ul>
+
+  <h3>2.7 Operational telemetry</h3>
+  <p>
+    The Service emits standard application telemetry (request paths, status
+    codes, durations, error stack traces) to Microsoft Application Insights.
+    Personal data is not intentionally written to telemetry. If a stack trace
+    incidentally contains a user id, it remains subject to the same access
+    controls as everything else.
+  </p>
+
+  <h2>3. What we do not collect</h2>
+  <ul>
+    <li>Source code.</li>
+    <li>The contents of your repositories.</li>
+    <li>
+      Pipeline secrets (e.g. <code>GITHUB_TOKEN</code>,
+      <code>AZURE_CREDENTIALS</code>). These may transit the Service as part
+      of a webhook payload, but are not persisted.
+    </li>
+    <li>
+      Personal data about end-users of your CI system beyond what appears in
+      event metadata (typically a username and an avatar URL).
+    </li>
+    <li>Cookies, beyond a single session cookie used by the admin UI for sign-in state.</li>
+  </ul>
+
+  <h2>4. How we use the data</h2>
+  <p>We use the data above solely to:</p>
+  <ol>
+    <li>Deliver adaptive cards to your Teams channels.</li>
+    <li>Authenticate you when you sign in to the admin UI.</li>
+    <li>Enforce per-organization rate limits to protect the Service.</li>
+    <li>Provide an audit trail of who changed what.</li>
+    <li>Bill you if you are on a paid plan.</li>
+  </ol>
+  <p>
+    We do <strong>not</strong> sell data. We do <strong>not</strong> share
+    data with advertisers. We do <strong>not</strong> train AI models on your
+    data.
+  </p>
+
+  <h2>5. Sub-processors</h2>
+  <p>
+    The Service runs on third-party infrastructure. The following sub-processors
+    necessarily receive your data:
+  </p>
+  <table>
+    <thead>
+      <tr><th>Sub-processor</th><th>Purpose</th><th>Data shared</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Microsoft Azure</td><td>Compute, storage, secrets, telemetry</td><td>All Service data</td></tr>
+      <tr><td>Microsoft Teams / Bot Framework</td><td>Delivery channel</td><td>Channel id, card payload</td></tr>
+      <tr><td>Microsoft Entra ID</td><td>Authentication</td><td>Tenant id, UPN</td></tr>
+      <tr><td>Stripe (if billing enabled)</td><td>Payment processing</td><td>Stripe customer id, plan tier, plan lifecycle events</td></tr>
+    </tbody>
+  </table>
+  <p>We do not engage additional sub-processors without updating this policy.</p>
+
+  <h2>6. Where the data lives</h2>
+  <p>
+    Service data is hosted in <strong>{{AZURE_REGION}}</strong> (Microsoft Azure).
+    Disaster-recovery backups, when present, remain within the same geography.
+  </p>
+  <p>If you require data residency in another region, contact us at <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>.</p>
+
+  <h2>7. Retention and deletion</h2>
+  <table>
+    <thead>
+      <tr><th>Data class</th><th>Retention</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Subscriptions, installations, bot channels</td><td>Until you delete them, or until the installation is removed</td></tr>
+      <tr><td>Approvals</td><td>30 days (auto-deleted by Cosmos DB TTL)</td></tr>
+      <tr><td>Audit log entries</td><td>90 days (auto-deleted by Cosmos DB TTL)</td></tr>
+      <tr><td>Build event payloads</td><td>Discarded immediately after delivery</td></tr>
+      <tr><td>Telemetry</td><td>90 days (Application Insights default)</td></tr>
+      <tr><td>Stripe records</td><td>Until the customer record is deleted via Stripe</td></tr>
+    </tbody>
+  </table>
+  <p>
+    <strong>Uninstalling the Service</strong> deletes all subscription,
+    installation, and bot-channel records for your tenant within 30 days.
+    Audit and telemetry continue to expire by TTL as above. To request
+    immediate deletion of all data, contact
+    <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>.
+  </p>
+
+  <h2>8. Your rights</h2>
+  <p>Depending on where you are based, you may have the right to:</p>
+  <ul>
+    <li>Access the data we hold about you.</li>
+    <li>Correct inaccurate data.</li>
+    <li>Delete your data.</li>
+    <li>Object to processing.</li>
+    <li>Receive a portable copy of your data.</li>
+  </ul>
+  <p>
+    To exercise any of these rights, email
+    <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>. We respond
+    within 30 days. We may require proof that the request comes from an
+    authorized admin of the affected tenant.
+  </p>
+
+  <h2>9. Security</h2>
+  <ul>
+    <li>All secrets (Workflows webhook URLs, API key hashes, Stripe keys) are stored in Azure Key Vault with managed-identity access only.</li>
+    <li>Management endpoints require Microsoft Entra Bearer tokens validated against the multi-tenant JWKS endpoint.</li>
+    <li>Per-organization rate limits prevent enumeration and abuse.</li>
+    <li>HTTPS is mandatory; HTTP requests are rejected by Azure Front Door.</li>
+    <li>Audit log entries are append-only.</li>
+  </ul>
+  <p>
+    We follow standard secure-development practices but make no warranty of
+    perfect security. Report security issues to
+    <a href="mailto:{{SECURITY_CONTACT_EMAIL}}">{{SECURITY_CONTACT_EMAIL}}</a>.
+  </p>
+
+  <h2>10. Children</h2>
+  <p>The Service is not directed at children under 16 and we do not knowingly process their data.</p>
+
+  <h2>11. International transfers</h2>
+  <p>
+    If you are based outside {{JURISDICTION}}, your data is transferred to and
+    processed in the Azure region listed in section 6. We rely on Microsoft's
+    Standard Contractual Clauses for cross-border transfers within the
+    Microsoft cloud.
+  </p>
+
+  <h2>12. Changes to this policy</h2>
+  <p>
+    We will update this policy when our practices change. The
+    <strong>Effective date</strong> at the top of this page reflects the most
+    recent revision. Material changes will be announced in the admin UI at
+    least 30 days before they take effect.
+  </p>
+
+  <h2>13. Contact</h2>
+  <p>
+    {{COMPANY_NAME}}<br />
+    {{COMPANY_ADDRESS}}<br />
+    <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>
+  </p>
+  <p>For data-protection-specific inquiries: <a href="mailto:{{DPO_EMAIL}}">{{DPO_EMAIL}}</a></p>
+</article>
+
+<footer class="site-footer">
+  <div class="foot-cols">
+    <div>
+      <strong>DevOps Connector</strong>
+      <p class="muted small">© {{YEAR}} {{COMPANY_NAME}}.</p>
+    </div>
+    <div>
+      <strong>Product</strong>
+      <a href="../#features">Features</a>
+      <a href="../#install">Install</a>
+    </div>
+    <div>
+      <strong>Legal</strong>
+      <a href="../privacy/">Privacy</a>
+      <a href="../terms/">Terms</a>
+    </div>
+    <div>
+      <strong>Code</strong>
+      <a href="{{GITHUB_URL}}">GitHub</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

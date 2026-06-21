@@ -1,0 +1,226 @@
+/* Per My Last Webhook — modern-retro 90s theme.
+   Palette + motifs pulled straight from the company logo: cream canvas,
+   teal + purple, Win95 beveled "windows", green CRT terminal, chunky display
+   type, taskbar. Self-contained: no webfonts/CDN, ships as-is. */
+
+:root {
+  --cream:    #e7e2d2;
+  --cream-2:  #efeadb;
+  --panel:    #d9d3c0;   /* window face / warm grey */
+  --ink:      #1b1c20;
+  --ink-2:    #4a4c54;
+  --teal:     #15b9a7;
+  --teal-d:   #0e8a7d;
+  --teal-ink: #04302b;
+  --purple:   #5d40c9;
+  --purple-d: #43308f;
+  --green:    #41d784;   /* CRT terminal */
+  --crt:      #0d0f13;
+  --coral:    #e8514a;
+  --line:     #b9b3a0;
+  --bevel-lt: #fbf8ee;
+  --bevel-dk: #8d8773;
+  --bevel-dk2:#6c6753;
+  --mono: "Cascadia Code", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --fg: var(--ink);
+  --fg-muted: var(--ink-2);
+  --primary: var(--teal);
+  --max-width: 1100px;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--cream);
+  background-image:
+    linear-gradient(rgba(21,185,167,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(93,64,201,0.05) 1px, transparent 1px);
+  background-size: 26px 26px;
+  color: var(--ink);
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--purple); text-decoration: none; font-weight: 600; }
+a:hover { color: var(--purple-d); text-decoration: underline; }
+
+code, pre, .mono { font-family: var(--mono); }
+code {
+  font-size: 0.9em; background: var(--cream-2);
+  padding: 0.08em 0.4em; border: 1px solid var(--line); color: var(--teal-ink);
+}
+
+h1, h2, h3 { line-height: 1.08; margin: 0 0 0.6rem; }
+h1 {
+  font-size: clamp(2.4rem, 5.5vw, 3.9rem);
+  font-weight: 900; text-transform: uppercase; letter-spacing: -0.015em;
+  color: var(--ink); text-shadow: 2px 2px 0 var(--teal), 4px 4px 0 var(--purple);
+}
+h2 { font-size: clamp(1.5rem, 3vw, 2.05rem); font-weight: 800; text-transform: uppercase; letter-spacing: 0.01em; }
+h3 { font-size: 1.08rem; font-weight: 800; letter-spacing: 0.01em; }
+.muted { color: var(--fg-muted); }
+.small { font-size: 0.85rem; }
+
+/* ---------- header / menu bar ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.5rem 1rem; background: var(--panel);
+  border-bottom: 2px solid var(--bevel-dk2);
+  box-shadow: inset 0 1px 0 var(--bevel-lt), 0 2px 0 rgba(0,0,0,0.08);
+}
+.brand {
+  display: inline-flex; align-items: center; gap: 0.6rem; color: var(--ink);
+  font-weight: 900; text-transform: uppercase; letter-spacing: 0.02em; font-size: 0.95rem;
+}
+.brand:hover { text-decoration: none; }
+.brand img { border: 1px solid var(--line); }
+.site-nav { display: flex; align-items: center; gap: 0.2rem; }
+.site-nav a {
+  color: var(--ink); font-size: 0.82rem; font-weight: 700; padding: 0.35rem 0.6rem;
+  text-transform: uppercase; letter-spacing: 0.02em;
+}
+.site-nav a:hover { background: var(--teal); color: #fff; text-decoration: none; }
+.site-nav .nav-cta { background: var(--purple); color: #fff; box-shadow: 2px 2px 0 var(--ink); }
+.site-nav .nav-cta:hover { background: var(--purple-d); color: #fff; }
+@media (max-width: 700px) { .site-nav a:not(.nav-cta) { display: none; } }
+
+/* ---------- main + sections ---------- */
+main { max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
+section { padding: 3.5rem 0; }
+section h2 { text-align: center; margin-bottom: 1.75rem; }
+section h2::after {
+  content: ""; display: block; width: 64px; height: 5px; margin: 0.6rem auto 0;
+  background: linear-gradient(90deg, var(--teal), var(--purple));
+}
+
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 2.5rem; align-items: center; padding: 3.5rem 0; }
+.eyebrow {
+  display: inline-block; font-family: var(--mono); font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple);
+  background: var(--cream-2); border: 1px solid var(--line); padding: 0.25rem 0.6rem; margin-bottom: 1rem;
+}
+.lede { font-size: 1.15rem; color: var(--fg-muted); margin: 1rem 0 1.75rem; max-width: 34rem; }
+.cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
+.trust { color: var(--fg-muted); font-size: 0.8rem; margin: 0; font-family: var(--mono); }
+
+.btn {
+  display: inline-block; padding: 0.7rem 1.4rem; font-weight: 800; font-size: 0.88rem;
+  text-transform: uppercase; letter-spacing: 0.03em; border: 2px solid var(--ink);
+  cursor: pointer; box-shadow: 3px 3px 0 var(--ink); transition: transform .04s, box-shadow .04s;
+}
+.btn:hover { text-decoration: none; }
+.btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
+.btn-primary { background: var(--teal); color: var(--teal-ink); }
+.btn-primary:hover { background: var(--teal-d); color: var(--teal-ink); }
+.btn-ghost { background: var(--cream-2); color: var(--ink); }
+.btn-ghost:hover { background: #fff; }
+
+.hero-visual { background: var(--panel); border: 2px solid var(--ink); box-shadow: 6px 6px 0 rgba(93,64,201,0.35); }
+.hero-visual::before {
+  content: "◰  webhook-relay.exe"; display: block; font-family: var(--mono);
+  background: linear-gradient(90deg, var(--purple), var(--teal)); color: #fff;
+  font-weight: 800; font-size: 0.78rem; letter-spacing: 0.02em; padding: 0.4rem 0.7rem;
+  border-bottom: 2px solid var(--ink);
+}
+.hero-visual svg { width: 100%; height: auto; display: block; background: var(--crt); color: var(--green); padding: 0.75rem; }
+@media (max-width: 880px) { .hero { grid-template-columns: 1fr; padding-top: 2.5rem; } }
+
+/* ---------- window cards (features) ---------- */
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.25rem; }
+.feature-grid article { background: var(--panel); border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(27,28,32,0.2); }
+.feature-grid article::before {
+  content: attr(data-title) "   _ □ ✕"; display: block; font-family: var(--mono);
+  background: var(--teal); color: var(--teal-ink); font-weight: 800; font-size: 0.76rem;
+  padding: 0.35rem 0.6rem; border-bottom: 2px solid var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.feature-grid h3 { padding: 1rem 1.1rem 0; }
+.feature-grid p { color: var(--fg-muted); margin: 0.4rem 0 0; padding: 0 1.1rem 1.2rem; }
+
+/* ---------- steps ---------- */
+.steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.75rem; }
+.steps li { background: var(--panel); border: 2px solid var(--ink); padding: 1.6rem 1.25rem 1.25rem; position: relative; box-shadow: 4px 4px 0 rgba(27,28,32,0.2); }
+.step-n {
+  position: absolute; top: -16px; left: 1rem; width: 34px; height: 34px;
+  background: var(--purple); color: #fff; display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 1.05rem; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-family: var(--mono);
+}
+.steps p { color: var(--fg-muted); margin: 0; }
+
+/* ---------- screenshots ---------- */
+.screenshots { text-align: center; }
+.screenshots .muted { max-width: 38rem; margin: -0.5rem auto 1.75rem; }
+.screenshots figure { margin: 0; border: 2px solid var(--ink); overflow: hidden; background: var(--panel); box-shadow: 6px 6px 0 rgba(21,185,167,0.4); }
+.screenshots figure::before {
+  content: "◰  admin-ui  —  C:\\WEBHOOKS\\PROD"; display: block; text-align: left; font-family: var(--mono);
+  background: linear-gradient(90deg, var(--purple), var(--teal)); color: #fff; font-weight: 800; font-size: 0.78rem;
+  padding: 0.4rem 0.7rem; border-bottom: 2px solid var(--ink);
+}
+.screenshots img { width: 100%; height: auto; display: block; }
+.screenshots figcaption { padding: 0.7rem 1rem; color: var(--fg-muted); font-size: 0.88rem; border-top: 2px solid var(--ink); background: var(--cream-2); }
+
+/* ---------- install (terminal) ---------- */
+.install { text-align: center; }
+.install p { max-width: 38rem; margin: 0 auto 1.5rem; color: var(--fg-muted); }
+.install pre {
+  max-width: 40rem; margin: 0 auto; text-align: left; padding: 0; overflow: hidden;
+  background: var(--crt); border: 2px solid var(--ink); box-shadow: 6px 6px 0 rgba(93,64,201,0.4); position: relative;
+}
+.install pre::before {
+  content: "C:\\WEBHOOKS\\PROD>  deploy.ps1"; display: block; font-family: var(--mono);
+  background: linear-gradient(90deg, var(--purple), var(--purple-d)); color: #fff; font-weight: 800;
+  font-size: 0.76rem; padding: 0.4rem 0.7rem; border-bottom: 2px solid var(--ink);
+}
+.install pre code { display: block; padding: 1rem 1.1rem; color: var(--green); background: none; border: none; font-size: 0.84rem; line-height: 1.6; overflow-x: auto; }
+
+/* ---------- FAQ ---------- */
+.faq { max-width: 44rem; margin: 0 auto; padding-bottom: 4rem; }
+.faq h2 { text-align: center; }
+.faq details { border: 2px solid var(--ink); padding: 0.8rem 1.1rem; margin-bottom: 0.75rem; background: var(--panel); box-shadow: 3px 3px 0 rgba(27,28,32,0.16); }
+.faq summary { font-weight: 800; cursor: pointer; list-style: none; text-transform: uppercase; letter-spacing: 0.01em; font-size: 0.95rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::before { content: "[+]"; display: inline-block; margin-right: 0.5rem; color: var(--teal-d); font-weight: 900; font-family: var(--mono); }
+.faq details[open] summary::before { content: "[-]"; color: var(--purple); }
+.faq p { color: var(--fg-muted); margin: 0.75rem 0 0; }
+
+/* ---------- footer + taskbar ---------- */
+.site-footer { background: var(--panel); border-top: 2px solid var(--ink); padding: 2.5rem 1.25rem 1.25rem; margin-top: 3.5rem; }
+.foot-cols { max-width: var(--max-width); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; }
+.foot-cols strong { display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.85rem; }
+.foot-cols a { display: block; color: var(--ink-2); font-size: 0.88rem; padding: 0.15rem 0; }
+.foot-cols a:hover { color: var(--purple-d); }
+.foot-cols .small { line-height: 1.5; margin-top: 0.5rem; }
+@media (max-width: 720px) { .foot-cols { grid-template-columns: 1fr 1fr; } }
+
+.taskbar {
+  position: sticky; bottom: 0; z-index: 20; display: flex; align-items: center; gap: 0.5rem;
+  background: var(--panel); border-top: 2px solid var(--bevel-lt);
+  box-shadow: inset 0 2px 0 rgba(0,0,0,0.06), 0 -2px 0 var(--bevel-dk2);
+  padding: 0.3rem 0.5rem; font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: var(--ink);
+}
+.taskbar .start { background: var(--teal); color: var(--teal-ink); padding: 0.2rem 0.6rem; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.taskbar .seg { border-left: 2px solid var(--bevel-dk); padding-left: 0.6rem; color: var(--ink-2); }
+.taskbar .clock { margin-left: auto; border: 1px solid var(--bevel-dk); background: var(--cream-2); padding: 0.2rem 0.55rem; }
+@media (max-width: 560px) { .taskbar .seg:nth-of-type(2) { display: none; } }
+
+/* ---------- legal pages ---------- */
+.legal { max-width: 44rem; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
+.legal h1 { font-size: clamp(2rem, 5vw, 2.6rem); }
+.legal h2 { text-align: left; margin: 2rem 0 0.75rem; font-size: 1.3rem; }
+.legal h2::after { margin-left: 0; }
+.legal h3 { margin: 1.5rem 0 0.5rem; font-size: 1.05rem; text-transform: none; }
+.legal table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; background: var(--panel); border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(27,28,32,0.18); }
+.legal th, .legal td { border: 1px solid var(--line); padding: 0.6rem 0.9rem; text-align: left; vertical-align: top; }
+.legal th { background: var(--teal); color: var(--teal-ink); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.02em; }
+.legal blockquote { border-left: 4px solid var(--purple); padding: 0.6rem 1rem; margin: 1rem 0; background: var(--cream-2); color: var(--fg-muted); }
+.legal hr { border: 0; border-top: 2px dashed var(--line); margin: 2rem 0; }
+.legal-meta { color: var(--fg-muted); font-size: 0.9rem; margin-bottom: 2rem; font-family: var(--mono); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn, .site-nav a { will-change: transform; }
+}

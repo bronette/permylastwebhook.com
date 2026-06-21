@@ -1,0 +1,17 @@
+{
+  "COMPANY_NAME": "Your Company, Inc.",
+  "COMPANY_ADDRESS": "123 Example Street, City, ST 00000, USA",
+  "CONTACT_EMAIL": "hello@example.com",
+  "DPO_EMAIL": "privacy@example.com",
+  "SECURITY_CONTACT_EMAIL": "security@example.com",
+  "EFFECTIVE_DATE": "2026-06-01",
+  "AZURE_REGION": "East US (eastus)",
+  "JURISDICTION": "the State of Delaware, USA",
+  "VENUE": "Wilmington, Delaware",
+  "RATE_LIMIT_PER_MINUTE": "60",
+  "YEAR": "2026",
+  "GITHUB_URL": "https://github.com/your-org/teams-devops-connector",
+  "STATUS_PAGE_URL": "https://status.example.com",
+  "INSTALL_URL": "https://teams.microsoft.com/l/app/REPLACE-ME-APP-ID",
+  "PRIVACY_URL": "https://example.com/privacy/"
+}
