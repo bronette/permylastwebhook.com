@@ -221,6 +221,42 @@ section h2::after {
 .legal hr { border: 0; border-top: 2px dashed var(--line); margin: 2rem 0; }
 .legal-meta { color: var(--fg-muted); font-size: 0.9rem; margin-bottom: 2rem; font-family: var(--mono); }
 
+/* ---------- pricing ---------- */
+.pricing { text-align: center; }
+.pricing-lede { max-width: 36rem; margin: -0.5rem auto 2rem; }
+.price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.25rem; align-items: stretch; }
+.price-card {
+  background: var(--panel); border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(27,28,32,0.2);
+  display: flex; flex-direction: column; text-align: left; position: relative;
+}
+.price-card::before {
+  content: attr(data-title) "   _ □ ✕"; display: block; font-family: var(--mono);
+  background: var(--teal); color: var(--teal-ink); font-weight: 800; font-size: 0.76rem;
+  padding: 0.35rem 0.6rem; border-bottom: 2px solid var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.price-card--feature { box-shadow: 6px 6px 0 var(--purple); }
+.price-card--feature::before { background: var(--purple); color: #fff; }
+.price-body { padding: 1.1rem 1.1rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
+.price-name { font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.9rem; color: var(--ink-2); }
+.price-amt {
+  font-family: var(--mono); font-weight: 800; font-size: 2.6rem; line-height: 1;
+  margin: 0.35rem 0 0.15rem; color: var(--ink); text-shadow: 2px 2px 0 var(--teal);
+}
+.price-card--feature .price-amt { text-shadow: 2px 2px 0 var(--purple); }
+.price-amt span { font-size: 1rem; font-weight: 700; color: var(--ink-2); text-shadow: none; }
+.price-per { font-family: var(--mono); font-size: 0.76rem; color: var(--ink-2); margin-bottom: 1rem; }
+.price-card ul { list-style: none; padding: 0; margin: 0 0 1.25rem; flex: 1; }
+.price-card li { padding: 0.3rem 0 0.3rem 1.4rem; position: relative; color: var(--fg-muted); font-size: 0.9rem; }
+.price-card li::before { content: "▸"; position: absolute; left: 0; color: var(--teal-d); font-weight: 900; }
+.price-card .btn { width: 100%; text-align: center; box-sizing: border-box; }
+.ribbon {
+  position: absolute; top: 2.1rem; right: -3px; z-index: 1; background: var(--coral); color: #fff;
+  font-family: var(--mono); font-weight: 800; font-size: 0.68rem; padding: 0.2rem 0.5rem;
+  border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); text-transform: uppercase; letter-spacing: 0.02em;
+}
+.pricing-note { max-width: 42rem; margin: 1.75rem auto 0; }
+
 @media (prefers-reduced-motion: no-preference) {
   .btn, .site-nav a { will-change: transform; }
 }

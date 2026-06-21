@@ -20,6 +20,7 @@
   <nav class="site-nav">
     <a href="#features">Features</a>
     <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
     <a href="#install">Install</a>
     <a href="#faq">FAQ</a>
     <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
@@ -163,6 +164,64 @@
         </p>
       </li>
     </ol>
+  </section>
+
+  <section id="pricing" class="pricing">
+    <h2>Pricing</h2>
+    <p class="muted pricing-lede">Free and open source to self-host. Or let us run the whole thing.</p>
+    <div class="price-grid">
+
+      <article class="price-card" data-title="selfhost.exe">
+        <div class="price-body">
+          <div class="price-name">Self-host</div>
+          <div class="price-amt">$0</div>
+          <div class="price-per">forever · Apache-2.0</div>
+          <ul>
+            <li>The full source on GitHub</li>
+            <li>Runs on your own Azure</li>
+            <li>All seven CI platforms</li>
+            <li>Community support</li>
+          </ul>
+          <a class="btn btn-ghost" href="{{GITHUB_URL}}">Get the source</a>
+        </div>
+      </article>
+
+      <article class="price-card price-card--feature" data-title="managed.exe">
+        <span class="ribbon">Founding · $29</span>
+        <div class="price-body">
+          <div class="price-name">Managed</div>
+          <div class="price-amt">$39<span>/mo</span></div>
+          <div class="price-per">per org · billed monthly · 14-day trial</div>
+          <ul>
+            <li>We run + maintain the Azure infra</li>
+            <li>Updates, uptime, backups</li>
+            <li>Generous fair-use volume</li>
+            <li>Email support</li>
+          </ul>
+          <a class="btn btn-primary" href="mailto:{{CONTACT_EMAIL}}?subject=Managed%20plan%20free%20trial">Start free trial</a>
+        </div>
+      </article>
+
+      <article class="price-card" data-title="enterprise.sys">
+        <div class="price-body">
+          <div class="price-name">Enterprise</div>
+          <div class="price-amt">Custom</div>
+          <div class="price-per">high volume · SLA · SSO</div>
+          <ul>
+            <li>Unlimited subscriptions + channels</li>
+            <li>Dedicated high-throughput limits</li>
+            <li>SLA, priority support, SSO</li>
+            <li>Volume-based pricing</li>
+          </ul>
+          <a class="btn btn-ghost" href="mailto:{{CONTACT_EMAIL}}?subject=Enterprise%20inquiry">Talk to us</a>
+        </div>
+      </article>
+
+    </div>
+    <p class="muted small pricing-note">
+      High-volume senders are welcome — the Managed plan includes generous fair-use, and
+      truly high-throughput tenants move to Enterprise for dedicated capacity and volume pricing.
+    </p>
   </section>
 
   <section class="screenshots">
