@@ -6,7 +6,7 @@ theme matching the company logo. Hosted on cPanel (Namecheap) at
 https://permylastwebhook.com.
 
 > The connector application itself lives in a separate repo
-> (`bronette/TeamsWebHook`). This repo is just the public website.
+> (`bronette/permylastwebhook`). This repo is just the public website.
 
 ## Layout
 
