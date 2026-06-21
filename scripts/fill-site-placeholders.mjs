@@ -18,6 +18,7 @@
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, statSync, cpSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = dirname(here);
@@ -32,6 +33,16 @@ try {
   console.error(`Cannot read ${configPath}: ${err.message}`);
   console.error(`Copy site/config.example.json to site/config.json and fill it in.`);
   process.exit(1);
+}
+
+// Auto cache-busting: version the stylesheet by a hash of its contents, exposed
+// as {{ASSET_VERSION}}. A CSS change always yields a new URL, so browsers never
+// serve a stale stylesheet (the cause of the "cards render as plain text" bug).
+try {
+  const css = readFileSync(join(siteDir, "styles.css"), "utf8");
+  config.ASSET_VERSION = createHash("md5").update(css).digest("hex").slice(0, 8);
+} catch {
+  config.ASSET_VERSION = "1";
 }
 
 // Templatable extensions. Everything else (PNG, SVG with no tokens, etc.) is
