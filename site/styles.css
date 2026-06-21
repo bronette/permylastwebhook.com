@@ -257,6 +257,26 @@ section h2::after {
 }
 .pricing-note { max-width: 42rem; margin: 1.75rem auto 0; }
 
+/* ---------- roadmap ---------- */
+.roadmap { text-align: center; }
+.roadmap-lede { margin: -0.5rem auto 2rem; }
+.road-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.25rem; align-items: start; text-align: left; }
+.road-col { background: var(--panel); border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgba(27,28,32,0.2); }
+.road-col::before {
+  content: attr(data-title) "   _ □ ✕"; display: block; font-family: var(--mono);
+  background: var(--teal); color: var(--teal-ink); font-weight: 800; font-size: 0.76rem;
+  padding: 0.35rem 0.6rem; border-bottom: 2px solid var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.road-col--next { box-shadow: 6px 6px 0 var(--purple); }
+.road-col--next::before { background: var(--purple); color: #fff; }
+.road-list { list-style: none; margin: 0; padding: 1rem 1.1rem 1.25rem; }
+.road-list li { position: relative; padding: 0.35rem 0 0.35rem 1.7rem; color: var(--fg-muted); font-size: 0.9rem; }
+.road-list li::before { position: absolute; left: 0; top: 0.35rem; font-family: var(--mono); font-weight: 900; }
+.road-done li::before { content: "[x]"; color: var(--teal-d); }
+.road-next li::before { content: "[~]"; color: var(--purple); }
+.road-soon li::before { content: "[ ]"; color: var(--ink-2); }
+
 @media (prefers-reduced-motion: no-preference) {
   .btn, .site-nav a { will-change: transform; }
 }
