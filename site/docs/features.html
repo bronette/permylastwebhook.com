@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Features — Per My Last Webhook docs</title>
+<meta name="description" content="Routing, incident mode, on-call DMs, quiet hours, dedupe, @mentions, approvals, and in-place card updates — everything Per My Last Webhook can do." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a>
+  <nav class="site-nav">
+    <a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/#install">Install</a>
+    <a href="/validator/">Validator</a><a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<div class="docs-shell">
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="side-title">Start here</div>
+    <ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+    <div class="side-title">Guides</div>
+    <ul>
+      <li><a href="migrate-from-office-365-connectors.html">Migrate from O365 Connectors</a></li>
+      <li><a href="platforms.html">Platform reference</a></li>
+      <li><a href="features.html" class="active">Features</a></li>
+      <li><a href="pricing.html">Pricing &amp; plans</a></li>
+    </ul>
+    <div class="side-title">This page</div>
+    <ul>
+      <li><a href="#destinations">Destinations</a></li>
+      <li><a href="#routing">Routing</a></li>
+      <li><a href="#incident">Incident mode</a></li>
+      <li><a href="#dm">On-call DMs</a></li>
+      <li><a href="#noise">Noise controls</a></li>
+      <li><a href="#mentions">@mentions</a></li>
+      <li><a href="#filters">Status filters</a></li>
+      <li><a href="#approvals">Approvals</a></li>
+      <li><a href="#branding">Branding</a></li>
+      <li><a href="#reliability">Reliability</a></li>
+    </ul>
+    <div class="side-title">Help</div>
+    <ul><li><a href="faq.html">FAQ</a></li><li><a href="getting-started.html#trouble">Troubleshooting</a></li></ul>
+  </aside>
+
+  <main class="docs-content">
+    <div class="crumbs"><a href="/docs/">Docs</a> / Features</div>
+    <h1>Features</h1>
+    <p class="lede">
+      A subscription isn't just "pipe events to a channel." It's a small, powerful control panel for
+      exactly what gets delivered, where, and how loudly. Here's the full toolkit — free features and
+      <span class="pill-pro">PRO</span> ones alike.
+    </p>
+
+    <h2 id="destinations">Destinations</h2>
+    <p>Each subscription delivers to exactly one place:</p>
+    <ul>
+      <li><strong>Teams channel</strong> (via the bot) — team-wide visibility, supports in-place updates and incident collapsing.</li>
+      <li><strong>Incoming webhook</strong> — paste a Teams Workflows / Power Automate URL. No bot needed.</li>
+      <li><strong>Direct message</strong> <span class="pill-pro">PRO</span> — the bot DMs a specific person (see <a href="#dm">On-call DMs</a>).</li>
+    </ul>
+
+    <h2 id="routing">Routing <span class="pill-pro">PRO</span></h2>
+    <p>Send different events to different places from one subscription. The first matching route wins;
+    if nothing matches, the default destination is used. Match on any combination of:</p>
+    <ul>
+      <li><strong>pipeline</strong> — exact or <code>*</code> glob (e.g. <code>deploy-*</code>)</li>
+      <li><strong>branch</strong> — exact or <code>*</code> glob</li>
+      <li><strong>environment</strong> — exact (e.g. <code>prod</code>)</li>
+      <li><strong>status</strong> — any-of (e.g. <code>["failure", "cancelled"]</code>)</li>
+    </ul>
+    <p>Classic pattern: prod failures to <code>#prod-alerts</code>, everything else stays in <code>#ci</code>.</p>
+    <div class="callout tip"><div class="bar">Tip</div><div class="inner"><p>A route can point at any destination type — including a DM. Route
+    <em>prod + failure</em> straight to the on-call owner's DM while the channel gets the full firehose.</p></div></div>
+
+    <h2 id="incident">Incident mode <span class="pill-pro">PRO</span></h2>
+    <p>When a pipeline flaps, incident mode collapses its repeated failures into <strong>one card that
+    updates in place</strong> — the first failure opens it, repeats bump a counter, and the next success
+    resolves it. Instead of 20 red cards, you get one that tells the story. Channel destinations only.</p>
+
+    <h2 id="dm">On-call DMs <span class="pill-pro">PRO</span></h2>
+    <p>The bot opens a 1:1 chat and DMs a specific person when their pipeline breaks — perfect for on-call
+    ownership. The recipient adds the app once (opens a 1:1 with the bot), then appears in the destination
+    picker. Pair it with <a href="#routing">routing</a> to DM the owner only on prod failures.</p>
+
+    <h2 id="noise">Noise controls <span class="pill-pro">PRO</span></h2>
+    <ul>
+      <li><strong>Quiet hours</strong> — suppress deliveries during a recurring window (e.g. 22:00–07:00 in your timezone). Overnight windows wrap past midnight.</li>
+      <li><strong>Dedupe window</strong> — swallow a repeat of the same (pipeline, status) within N seconds. Tames a job that fires the same failure on a loop.</li>
+      <li><strong>Failure-only</strong> — deliver only failures plus the first success after a failure (the recovery). Kills steady-state green noise.</li>
+    </ul>
+
+    <h2 id="mentions">@mentions on failure <span class="pill-pro">PRO</span></h2>
+    <p>Map owners to a subscription and the failure card @mentions them, so the right people get pinged in a
+    busy channel. Identify people by Teams MRI or AAD object id.</p>
+
+    <h2 id="filters">Status filters</h2>
+    <p>Only care about failures? Filter a subscription to just the statuses you want — <code>failure</code>,
+    <code>success</code>, <code>started</code>, deployments, and more. Available on every plan.</p>
+
+    <h2 id="approvals">Approvals <span class="pill-pro">PRO</span></h2>
+    <p>Gate a deploy behind an approve/reject Adaptive Card right in Teams. The decision is recorded in the
+    audit log with who clicked and when — a lightweight change-control step without leaving chat.</p>
+
+    <h2 id="branding">Custom branding <span class="pill-pro">PRO</span></h2>
+    <p>Show your own logo on every card a subscription sends, in place of the default status glyph.</p>
+
+    <h2 id="reliability">Reliability &amp; audit</h2>
+    <ul>
+      <li><strong>In-place updates</strong> — on bot channels, a run's card updates from <em>started → success/failure</em> instead of stacking new cards.</li>
+      <li><strong>Retries</strong> — transient delivery failures are retried with backoff; timeouts are handled so you don't get duplicate posts.</li>
+      <li><strong>Per-org rate limits</strong> — a noisy org can't drown out others.</li>
+      <li><strong>Audit log</strong> — subscription changes and approval decisions are recorded for forensics.</li>
+    </ul>
+
+    <div class="callout note"><div class="bar">See what's free vs Pro</div><div class="inner"><p>The
+    <a href="pricing.html">Pricing &amp; plans</a> page lays out exactly which features are on each tier.</p></div></div>
+  </main>
+</div>
+</div>
+
+<div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\FEATURES</span><span class="clock">Status: 200 OK</span></div>
+</body>
+</html>

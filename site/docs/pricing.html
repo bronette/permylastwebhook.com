@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pricing &amp; plans — Per My Last Webhook docs</title>
+<meta name="description" content="Free vs Pro for Per My Last Webhook: what's included on each plan — platforms, destinations, routing, incident mode, on-call DMs, approvals, and more." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="docs.css" />
+<style>
+  .plan-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.94rem; }
+  .plan-table th, .plan-table td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--line); }
+  .plan-table th { text-transform: uppercase; font-size: 0.78rem; letter-spacing: 0.04em; background: var(--panel); border-bottom: 2px solid var(--bevel-dk2); }
+  .plan-table td.col { text-align: center; width: 90px; }
+  .plan-table .yes { color: var(--teal-d); font-weight: 800; }
+  .plan-table .no { color: var(--ink-2); }
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+  .plan { border: 2px solid var(--bevel-dk2); background: var(--cream-2); box-shadow: 3px 3px 0 rgba(0,0,0,0.08); padding: 1rem 1.1rem; }
+  .plan.pro { border-color: var(--purple); }
+  .plan .tier { text-transform: uppercase; font-weight: 900; letter-spacing: 0.04em; }
+  .plan .price { font-size: 1.6rem; font-weight: 900; margin: 0.2rem 0; }
+  .plan .price small { font-size: 0.8rem; font-weight: 600; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a>
+  <nav class="site-nav">
+    <a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/#install">Install</a>
+    <a href="/validator/">Validator</a><a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<div class="docs-shell">
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="side-title">Start here</div>
+    <ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+    <div class="side-title">Guides</div>
+    <ul>
+      <li><a href="migrate-from-office-365-connectors.html">Migrate from O365 Connectors</a></li>
+      <li><a href="platforms.html">Platform reference</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html" class="active">Pricing &amp; plans</a></li>
+    </ul>
+    <div class="side-title">Help</div>
+    <ul><li><a href="faq.html">FAQ</a></li><li><a href="getting-started.html#trouble">Troubleshooting</a></li></ul>
+  </aside>
+
+  <main class="docs-content">
+    <div class="crumbs"><a href="/docs/">Docs</a> / Pricing &amp; plans</div>
+    <h1>Pricing &amp; plans</h1>
+    <p class="lede">
+      Start free — all sixteen platforms, rich cards, and real delivery, no credit card. Upgrade to Pro when you
+      need scale and the workflow features: routing, incident mode, on-call DMs, approvals, and unlimited subscriptions.
+    </p>
+
+    <div class="plans">
+      <div class="plan">
+        <div class="tier">Free</div>
+        <div class="price">$0</div>
+        <p class="muted small">Everything you need to replace an Office 365 Connector.</p>
+        <ul>
+          <li>All 16 platforms</li>
+          <li>Rich Adaptive Cards</li>
+          <li>Channel &amp; incoming-webhook destinations</li>
+          <li>Status filters</li>
+          <li>Up to 3 subscriptions</li>
+          <li>Audit log</li>
+        </ul>
+      </div>
+      <div class="plan pro">
+        <div class="tier">Pro</div>
+        <div class="price">$49<small> / month</small></div>
+        <p class="muted small">Flat per tenant (no per-seat). For teams that route, escalate, and gate deploys.</p>
+        <ul>
+          <li><strong>Unlimited</strong> subscriptions</li>
+          <li>Everything in Free, plus:</li>
+          <li>Destination routing</li>
+          <li>Incident mode</li>
+          <li>On-call direct messages</li>
+          <li>Quiet hours, dedupe, failure-only</li>
+          <li>@mentions on failure</li>
+          <li>Approvals</li>
+          <li>Custom branding</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout note"><div class="bar">Pro is rolling out</div><div class="inner"><p>Pro features are live in
+    the product; self-serve billing is coming shortly. Want early access? <a href="mailto:{{CONTACT_EMAIL}}">Email us</a>
+    and we'll switch your tenant on.</p></div></div>
+
+    <h2>Full comparison</h2>
+    <div style="overflow-x:auto">
+    <table class="plan-table">
+      <thead><tr><th>Capability</th><th class="col">Free</th><th class="col">Pro</th></tr></thead>
+      <tbody>
+        <tr><td>CI/CD, observability &amp; incident platforms (all 16)</td><td class="col yes">✓</td><td class="col yes">✓</td></tr>
+        <tr><td>Rich Adaptive Cards</td><td class="col yes">✓</td><td class="col yes">✓</td></tr>
+        <tr><td>Channel &amp; webhook destinations</td><td class="col yes">✓</td><td class="col yes">✓</td></tr>
+        <tr><td>Status filters</td><td class="col yes">✓</td><td class="col yes">✓</td></tr>
+        <tr><td>Audit log</td><td class="col yes">✓</td><td class="col yes">✓</td></tr>
+        <tr><td>Subscriptions</td><td class="col">3</td><td class="col yes">Unlimited</td></tr>
+        <tr><td>Destination routing</td><td class="col no">—</td><td class="col yes">✓</td></tr>
+        <tr><td>Incident mode</td><td class="col no">—</td><td class="col yes">✓</td></tr>
+        <tr><td>On-call direct messages</td><td class="col no">—</td><td class="col yes">✓</td></tr>
+        <tr><td>Quiet hours / dedupe / failure-only</td><td class="col no">—</td><td class="col yes">✓</td></tr>
+        <tr><td>@mentions on failure</td><td class="col no">—</td><td class="col yes">✓</td></tr>
+        <tr><td>Approvals</td><td class="col no">—</td><td class="col yes">✓</td></tr>
+        <tr><td>Custom branding</td><td class="col no">—</td><td class="col yes">✓</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2>Common questions</h2>
+    <h3>Is billing per user?</h3>
+    <p>No — Pro is a flat price per Teams tenant. No seat counting; add the whole team.</p>
+    <h3>What happens at the Free subscription limit?</h3>
+    <p>You can keep using your existing subscriptions; creating a 4th prompts an upgrade. Nothing you've already set up stops working.</p>
+    <h3>Do I lose data if I downgrade?</h3>
+    <p>No. Your subscriptions and history stay put; Pro-only features simply become read-only until you re-upgrade.</p>
+
+    <p class="muted small">See the <a href="faq.html">FAQ</a> for data handling and security, or the
+    <a href="features.html">features guide</a> for what each capability does.</p>
+  </main>
+</div>
+</div>
+
+<div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\PRICING</span><span class="clock">Status: 200 OK</span></div>
+</body>
+</html>

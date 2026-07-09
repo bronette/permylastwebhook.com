@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Documentation — Per My Last Webhook</title>
+<meta name="description" content="Docs for Per My Last Webhook: onboarding, per-platform setup, features, and troubleshooting for CI/CD notifications in Microsoft Teams." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/">
+    <img src="../logo-mark.svg" alt="" width="32" height="32" />
+    <span>Per My Last Webhook</span>
+  </a>
+  <nav class="site-nav">
+    <a href="/#features">Features</a>
+    <a href="/docs/">Docs</a>
+    <a href="/#install">Install</a>
+    <a href="/validator/">Validator</a>
+    <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<div class="docs-shell">
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="side-title">Start here</div>
+    <ul>
+      <li><a href="/docs/" class="active">Docs home</a></li>
+      <li><a href="getting-started.html">Getting started</a></li>
+    </ul>
+    <div class="side-title">Guides</div>
+    <ul>
+      <li><a href="migrate-from-office-365-connectors.html">Migrate from O365 Connectors</a></li>
+      <li><a href="platforms.html">Platform reference</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing &amp; plans</a></li>
+    </ul>
+    <div class="side-title">Help</div>
+    <ul>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="getting-started.html#trouble">Troubleshooting</a></li>
+    </ul>
+  </aside>
+
+  <main class="docs-content">
+    <div class="crumbs">Docs</div>
+    <h1>Documentation</h1>
+    <p class="lede">
+      Everything you need to turn CI/CD pipeline events into rich Teams cards — onboarding,
+      per-platform setup, features, and troubleshooting. New here? Start with the guide below.
+    </p>
+
+    <div class="callout note">
+      <div class="bar">New? Start here</div>
+      <div class="inner">
+        <p><strong><a href="getting-started.html">→ Getting started</a></strong> takes you from install to
+        your first live build card in about five minutes, with copy-paste setup steps for all sixteen platforms.</p>
+      </div>
+    </div>
+
+    <h2>Browse by topic</h2>
+    <div class="next-grid">
+      <div class="card">
+        <h3><a href="getting-started.html#install">Onboarding</a></h3>
+        <p>Install the app, get admin consent, and choose where cards land — channel, DM, or webhook.</p>
+      </div>
+      <div class="card">
+        <h3><a href="migrate-from-office-365-connectors.html">Migrate from O365 Connectors</a></h3>
+        <p>Office 365 Connectors retired? Move your CI/CD notifications over in a few minutes, per pipeline.</p>
+      </div>
+      <div class="card">
+        <h3><a href="platforms.html">Platform reference</a></h3>
+        <p>Exact webhook steps and status mappings for 16 platforms — GitHub, GitLab, Jenkins, Azure DevOps, Bitbucket, CircleCI, Buildkite, Argo CD, TeamCity, Datadog, Grafana, Drone, Sentry, PagerDuty, Alertmanager, Octopus — and generic JSON.</p>
+      </div>
+      <div class="card">
+        <h3><a href="features.html">Features</a></h3>
+        <p>Routing, incident mode, on-call DMs, quiet hours, dedupe, status filters, and approvals.</p>
+      </div>
+      <div class="card">
+        <h3><a href="pricing.html">Pricing &amp; plans</a></h3>
+        <p>What's included on Free vs Pro — platforms, destinations, and the workflow features.</p>
+      </div>
+      <div class="card">
+        <h3><a href="faq.html">FAQ</a></h3>
+        <p>Plans, data handling, security, install/consent, and how this replaces Office 365 Connectors.</p>
+      </div>
+      <div class="card">
+        <h3><a href="/validator/">Card validator</a></h3>
+        <p>Paste a payload and preview the exact Adaptive Card we'd render — before you wire anything up.</p>
+      </div>
+      <div class="card">
+        <h3><a href="getting-started.html#trouble">Troubleshooting</a></h3>
+        <p>Card didn't arrive? Sign-in trouble? The fast fixes, plus the in-app Diagnostics tab.</p>
+      </div>
+    </div>
+
+    <h2>What it does, in one line</h2>
+    <p>Your pipeline POSTs a webhook to a private ingest URL; we normalize it into a rich Adaptive Card and
+    deliver it to a Teams channel, a person's DM, or an incoming-webhook URL — with routing, noise controls,
+    and an audit trail. The drop-in successor to deprecated Office 365 Connectors.</p>
+
+    <div class="callout tip">
+      <div class="bar">Need a hand?</div>
+      <div class="inner"><p>Email <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a> — real humans, real answers.</p></div>
+    </div>
+  </main>
+</div>
+</div>
+
+<div class="taskbar">
+  <span class="start">▣ Start</span>
+  <span class="seg">PER MY LAST WEBHOOK</span>
+  <span class="seg">C:\DOCS</span>
+  <span class="clock">Status: 200 OK</span>
+</div>
+</body>
+</html>

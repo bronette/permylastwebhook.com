@@ -4,25 +4,25 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Per My Last Webhook — Enterprise Integrations, 90s Vibes.</title>
-<meta name="description" content="Rich Teams notifications from Jenkins, GitHub Actions, GitLab, Azure Pipelines, Buildkite, CircleCI, and Bitbucket. The successor to deprecated Office 365 Connectors." />
+<meta name="description" content="Rich Teams notifications from 16 tools — Jenkins, GitHub Actions, GitLab, Azure Pipelines, Buildkite, CircleCI, Bitbucket, Argo CD, TeamCity, Datadog, Grafana, Drone, Sentry, PagerDuty, Alertmanager, and Octopus Deploy. The successor to deprecated Office 365 Connectors." />
 <link rel="icon" href="favicon.png" type="image/png" sizes="32x32" />
 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 <meta property="og:title" content="Per My Last Webhook — DevOps Connector for Teams" />
 <meta property="og:image" content="og-image.png" />
-<link rel="stylesheet" href="styles.css?v={{ASSET_VERSION}}" />
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 <header class="site-header">
   <a class="brand" href="/">
-    <img src="logo.png" alt="Per My Last Webhook logo" width="32" height="32" />
+    <img src="logo-mark.svg" alt="" width="32" height="32" />
     <span>Per My Last Webhook</span>
   </a>
   <nav class="site-nav">
     <a href="#features">Features</a>
-    <a href="#how">How it works</a>
-    <a href="#pricing">Pricing</a>
+    <a href="integrations/">Integrations</a>
+    <a href="docs/">Docs</a>
     <a href="#install">Install</a>
-    <a href="#roadmap">Roadmap</a>
+    <a href="validator/">Validator</a>
     <a href="#faq">FAQ</a>
     <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
   </nav>
@@ -35,7 +35,7 @@
       <h1>Pipeline events,<br />in your Teams channel.</h1>
       <p class="lede">
         A drop-in replacement for the deprecated Office 365 Connectors.
-        Normalize webhook events from seven CI platforms into one Teams app,
+        Normalize webhook events from sixteen CI/CD, GitOps, observability &amp; incident tools into one Teams app,
         with rate limiting, retries, and an audit trail.
       </p>
       <div class="cta-row">
@@ -61,7 +61,9 @@
           <text x="24" y="86">GitHub Actions</text>
           <text x="24" y="124">GitLab CI</text>
           <text x="24" y="162">Azure Pipelines</text>
-          <text x="24" y="200">Buildkite · CircleCI · Bitbucket</text>
+          <text x="24" y="182" font-size="9">Buildkite · CircleCI · Bitbucket · Argo CD</text>
+          <text x="24" y="202" font-size="9">TeamCity · Datadog · Grafana · Drone · Sentry</text>
+          <text x="24" y="222" font-size="9">PagerDuty · Alertmanager · Octopus Deploy</text>
         </g>
         <path d="M 160 48 Q 220 48 220 120 T 280 120"
               stroke="url(#g)" stroke-width="2" fill="none" />
@@ -84,11 +86,13 @@
     <h2>What you get</h2>
     <div class="feature-grid">
       <article data-title="adapters.dll">
-        <h3>Seven CI platforms</h3>
+        <h3>Sixteen integrations</h3>
         <p>
-          Jenkins, GitHub Actions, GitLab CI, Azure Pipelines, Buildkite,
-          CircleCI, and Bitbucket Pipelines, normalized to one common event
-          model. Add another platform by writing one adapter.
+          Jenkins, GitHub Actions, GitLab, Azure Pipelines, Buildkite, CircleCI,
+          Bitbucket, Argo CD, TeamCity, Datadog, Grafana, Drone, Sentry, PagerDuty,
+          Alertmanager, and Octopus Deploy — CI/CD, GitOps, observability, and
+          incidents, normalized to one common event model. Add another by writing
+          one adapter, or use the generic JSON webhook.
         </p>
       </article>
       <article data-title="delivery.sys">
@@ -167,64 +171,6 @@
     </ol>
   </section>
 
-  <section id="pricing" class="pricing">
-    <h2>Pricing</h2>
-    <p class="muted pricing-lede">Free and open source to self-host. Or let us run the whole thing.</p>
-    <div class="price-grid">
-
-      <article class="price-card" data-title="selfhost.exe">
-        <div class="price-body">
-          <div class="price-name">Self-host</div>
-          <div class="price-amt">$0</div>
-          <div class="price-per">forever · Apache-2.0</div>
-          <ul>
-            <li>The full source on GitHub</li>
-            <li>Runs on your own Azure</li>
-            <li>All seven CI platforms</li>
-            <li>Community support</li>
-          </ul>
-          <a class="btn btn-ghost" href="{{GITHUB_URL}}">Get the source</a>
-        </div>
-      </article>
-
-      <article class="price-card price-card--feature" data-title="managed.exe">
-        <span class="ribbon">Founding · $29</span>
-        <div class="price-body">
-          <div class="price-name">Managed</div>
-          <div class="price-amt">$39<span>/mo</span></div>
-          <div class="price-per">per org · billed monthly · 14-day trial</div>
-          <ul>
-            <li>We run + maintain the Azure infra</li>
-            <li>Updates, uptime, backups</li>
-            <li>Generous fair-use volume</li>
-            <li>Email support</li>
-          </ul>
-          <a class="btn btn-primary" href="mailto:{{CONTACT_EMAIL}}?subject=Managed%20plan%20free%20trial">Start free trial</a>
-        </div>
-      </article>
-
-      <article class="price-card" data-title="enterprise.sys">
-        <div class="price-body">
-          <div class="price-name">Enterprise</div>
-          <div class="price-amt">Custom</div>
-          <div class="price-per">high volume · SLA · SSO</div>
-          <ul>
-            <li>Unlimited subscriptions + channels</li>
-            <li>Dedicated high-throughput limits</li>
-            <li>SLA, priority support, SSO</li>
-            <li>Volume-based pricing</li>
-          </ul>
-          <a class="btn btn-ghost" href="mailto:{{CONTACT_EMAIL}}?subject=Enterprise%20inquiry">Talk to us</a>
-        </div>
-      </article>
-
-    </div>
-    <p class="muted small pricing-note">
-      High-volume senders are welcome — the Managed plan includes generous fair-use, and
-      truly high-throughput tenants move to Enterprise for dedicated capacity and volume pricing.
-    </p>
-  </section>
-
   <section class="screenshots">
     <h2>Admin UI</h2>
     <p class="muted">
@@ -259,38 +205,47 @@ cd teams-devops-connector
     </p>
   </section>
 
-  <section id="roadmap" class="roadmap">
-    <h2>Roadmap</h2>
-    <p class="muted roadmap-lede">Built in the open — here's where it's headed.</p>
-    <div class="road-grid">
-
-      <article class="road-col" data-title="shipped.log">
-        <ul class="road-list road-done">
-          <li>Seven CI platforms, normalized</li>
-          <li>In-place card updates (Bot Framework)</li>
-          <li>Deployment approvals</li>
-          <li>Multi-tenant Entra OAuth</li>
-          <li>Audit log + per-org rate limits</li>
-          <li>Billing + plan tiers</li>
-        </ul>
-      </article>
-
-      <article class="road-col road-col--next" data-title="next.exe">
-        <ul class="road-list road-next">
-          <li>MessageCard drop-in — migrate a retired connector by changing only the URL</li>
-          <li>Generic JSON webhook + field mapper — point anything that can POST at it</li>
-        </ul>
-      </article>
-
-      <article class="road-col" data-title="backlog.sys">
-        <ul class="road-list road-soon">
-          <li>Incident sources — PagerDuty, Datadog, Sentry</li>
-          <li>Routing &amp; filtering rules</li>
-          <li>Slack + Discord delivery</li>
-          <li>SSO / SAML for the admin UI</li>
-        </ul>
-      </article>
-
+  <section id="about" class="about">
+    <h2>About us</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <span class="eyebrow">// whoami</span>
+        <p>
+          It's me — and my dog <strong>Yogi</strong>. Yogi handles moral support
+          and aggressive napping; he doesn't code much, though he did once step
+          on the keyboard and ship a semicolon that, frankly, needed to be there.
+          We operate out of <strong>Coeur d'Alene, Idaho</strong> — the
+          world-renowned tech hub of innovation,<sup>*</sup> where the nearest
+          FAANG office is a four-hour drive and daily standup is me telling the
+          dog what I'm working on.
+        </p>
+        <p>
+          Jokes aside: I genuinely love writing quality software. Not
+          "move-fast-and-leave-the-race-conditions-in" software — the kind with
+          real tests, honest error handling, and an audit trail, built by someone
+          who'll be personally embarrassed if it breaks. Office 365 Connectors got
+          deprecated out from under everyone, so I built the replacement I wanted
+          to use and put my name (well, the webhook's name) on it.
+        </p>
+        <p>
+          No VC, no growth team, no "synergy." Just careful code, a fair price,
+          and a human who reads every support email. Yogi reads none of them. He
+          is the face of the company and contributes nothing.
+        </p>
+        <p class="muted small">
+          <sup>*</sup>Citation pending. It is, however, genuinely beautiful here,
+          the lake is real, and the dog is very good.
+        </p>
+      </div>
+      <aside class="card-window" aria-label="Mailing address">
+        <div class="card-window-bar">MAILBOX</div>
+        <address class="card-window-body">
+          <strong>{{COMPANY_NAME}}</strong><br />
+          {{COMPANY_ADDRESS}}<br />
+          United States<br />
+          <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>
+        </address>
+      </aside>
     </div>
   </section>
 

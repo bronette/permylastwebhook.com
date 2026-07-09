@@ -4,8 +4,10 @@
   "private": true,
   "description": "Marketing + setup site for Per My Last Webhook (permylastwebhook.com).",
   "scripts": {
-    "site:build": "node scripts/fill-site-placeholders.mjs",
-    "deploy": ".deploy-venv/bin/python scripts/deploy_site.py"
+    "site:build": "node scripts/gen-integration-pages.mjs && node scripts/gen-sitemap.mjs && node scripts/fill-site-placeholders.mjs",
+    "deploy": ".deploy-venv/bin/python scripts/deploy_site.py",
+    "gen:integrations": "node scripts/gen-integration-pages.mjs",
+    "gen:sitemap": "node scripts/gen-sitemap.mjs"
   },
   "engines": {
     "node": ">=18"

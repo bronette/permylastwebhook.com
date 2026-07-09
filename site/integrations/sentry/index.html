@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sentry → Microsoft Teams Notifications · Per My Last Webhook</title>
+<meta name="description" content="Send Sentry build and pipeline notifications to Microsoft Teams as rich Adaptive Cards. Sentry issues and alerts in Teams — errors surfaced where your team already is. Free to start." />
+<link rel="canonical" href="https://permylastwebhook.com/integrations/sentry/" />
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../../docs/docs.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><img src="../../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a>
+  <nav class="site-nav">
+    <a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/integrations/">Integrations</a>
+    <a href="/#install">Install</a><a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+<div class="docs-shell">
+  <main class="docs-content" style="max-width:820px;margin:0 auto">
+    <div class="crumbs"><a href="/integrations/">Integrations</a> / Sentry</div>
+    <h1>Sentry notifications in Microsoft&nbsp;Teams</h1>
+    <p class="lede">Sentry issues and alerts in Teams — errors surfaced where your team already is. Per My Last Webhook normalizes Sentry events into rich Adaptive Cards and posts them to a Teams channel, a person's DM, or a webhook — the successor to Office&nbsp;365 Connectors.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="/#install">Install for Teams</a>
+      <a class="btn btn-ghost" href="/docs/getting-started.html">Read the guide</a>
+    </div>
+
+    <h2>How it works</h2>
+    <ol>
+      <li><strong>Sentry</strong> POSTs a webhook to your private ingest URL when a build runs.</li>
+      <li>We <strong>normalize</strong> it — the same card format as every other platform.</li>
+      <li>The card lands in your chosen <strong>Teams destination</strong>, with routing and noise controls applied.</li>
+    </ol>
+
+    <h2>Set up in minutes</h2>
+    <p>Create a subscription in the app (platform: <strong>Sentry</strong>), copy its ingest URL, then:</p>
+      <div class="step"><div class="num">1</div><div class="body"><p>Create a subscription (platform <strong>Sentry</strong>) and copy its ingest URL.</p></div></div>
+      <div class="step"><div class="num">2</div><div class="body"><p>In Sentry, add an <strong>Alert rule</strong> with a webhook / internal-integration action.</p></div></div>
+      <div class="step"><div class="num">3</div><div class="body"><p>Point it at the ingest URL with a JSON body (title, level, project — see the <a href="/docs/platforms.html#sentry">reference</a>).</p></div></div>
+      <div class="step"><div class="num">4</div><div class="body"><p>Trigger the alert → the card lands.</p></div></div>
+    <div class="callout tip"><div class="bar">See it instantly</div><div class="inner"><p>Don't want to wait for a build? Hit <strong>Test</strong> on the subscription — a card lands immediately. Full steps in the <a href="/docs/platforms.html#sentry">platform reference</a>.</p></div></div>
+
+    <h2>What lands in Teams</h2>
+    <div class="card-window">
+      <div class="card-window-bar">Teams · #ci</div>
+      <div class="card-window-body">
+        <strong>🔴 TypeError in checkout · failure</strong><br />
+        <span class="muted small">Sentry · prod · alice · 3m 20s</span>
+      </div>
+    </div>
+
+    <h2>Built for teams, not just alerts</h2>
+    <div class="next-grid">
+      <div class="card"><h3>Routing <span class="pill-pro">PRO</span></h3><p>Prod failures to #prod-alerts, the rest to #ci.</p></div>
+      <div class="card"><h3>Incident mode <span class="pill-pro">PRO</span></h3><p>Collapse a flapping pipeline into one updating card.</p></div>
+      <div class="card"><h3>On-call DMs <span class="pill-pro">PRO</span></h3><p>DM the owner the moment their Sentry build breaks.</p></div>
+      <div class="card"><h3>Status filters</h3><p>Only care about failures? Filter to just those — free.</p></div>
+    </div>
+
+    <div class="cta-row" style="margin-top:1.5rem">
+      <a class="btn btn-primary" href="/#install">Install for Teams — free</a>
+      <a class="btn btn-ghost" href="/integrations/">All integrations</a>
+    </div>
+    <p class="muted small">Also works with GitHub Actions, GitLab, Jenkins, Azure DevOps, Bitbucket, CircleCI, Buildkite, and any JSON webhook.</p>
+  </main>
+</div>
+<div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\INTEGRATIONS\SENTRY</span><span class="clock">Status: 200 OK</span></div>
+</body>
+</html>

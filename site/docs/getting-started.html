@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Getting started — Per My Last Webhook docs</title>
+<meta name="description" content="Set up Per My Last Webhook in Teams: install the app, choose where cards go, create your first subscription, and connect your CI/CD platform in minutes." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/">
+    <img src="../logo-mark.svg" alt="" width="32" height="32" />
+    <span>Per My Last Webhook</span>
+  </a>
+  <nav class="site-nav">
+    <a href="/#features">Features</a>
+    <a href="/docs/">Docs</a>
+    <a href="/#install">Install</a>
+    <a href="/validator/">Validator</a>
+    <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<div class="docs-shell">
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="side-title">Start here</div>
+    <ul>
+      <li><a href="/docs/">Docs home</a></li>
+      <li><a href="getting-started.html" class="active">Getting started</a></li>
+    </ul>
+    <div class="side-title">Guides</div>
+    <ul>
+      <li><a href="migrate-from-office-365-connectors.html">Migrate from O365 Connectors</a></li>
+      <li><a href="platforms.html">Platform reference</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing &amp; plans</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <div class="side-title">This guide</div>
+    <ul>
+      <li><a href="#need">What you'll need</a></li>
+      <li><a href="#install">1 · Install the app</a></li>
+      <li><a href="#destination">2 · Choose a destination</a></li>
+      <li><a href="#subscription">3 · Create a subscription</a></li>
+      <li><a href="#connect">4 · Connect your platform</a></li>
+      <li><a href="#verify">5 · Fire a test card</a></li>
+      <li><a href="#next">Next steps</a></li>
+      <li><a href="#trouble">Troubleshooting</a></li>
+    </ul>
+    <div class="side-title">Platforms</div>
+    <ul>
+      <li><a href="#gh">GitHub Actions</a></li>
+      <li><a href="#gl">GitLab</a></li>
+      <li><a href="#jk">Jenkins</a></li>
+      <li><a href="#ado">Azure DevOps</a></li>
+      <li><a href="#bb">Bitbucket</a></li>
+      <li><a href="#cc">CircleCI</a></li>
+      <li><a href="#bk">Buildkite</a></li>
+      <li><a href="#argocd">Argo CD</a></li>
+      <li><a href="#teamcity">TeamCity</a></li>
+      <li><a href="#datadog">Datadog</a></li>
+      <li><a href="#grafana">Grafana</a></li>
+      <li><a href="#drone">Drone CI</a></li>
+      <li><a href="#sentry">Sentry</a></li>
+      <li><a href="#pagerduty">PagerDuty</a></li>
+      <li><a href="#alertmanager">Alertmanager</a></li>
+      <li><a href="#octopus">Octopus Deploy</a></li>
+      <li><a href="#generic">Anything else (generic)</a></li>
+    </ul>
+  </aside>
+
+  <main class="docs-content">
+    <div class="crumbs"><a href="/docs/">Docs</a> / Getting started</div>
+    <h1>Getting started</h1>
+    <p class="lede">
+      From zero to a build card in your Teams channel in about five minutes. Install the
+      app, pick where notifications land, create a subscription, and paste one URL into
+      your CI/CD platform. That's the whole loop.
+    </p>
+
+    <div class="callout note">
+      <div class="bar">The mental model</div>
+      <div class="inner">
+        <p>Your CI/CD platform sends a <strong>webhook</strong> to a private <strong>ingest URL</strong>
+        we give you. We normalize it into a rich <strong>Adaptive Card</strong> and deliver it to the
+        <strong>destination</strong> on your <strong>subscription</strong> — a Teams channel, a
+        person's DM, or an incoming-webhook URL. One subscription = one pipeline → one place.</p>
+      </div>
+    </div>
+
+    <h2 id="need">What you'll need</h2>
+    <ul>
+      <li>A <strong>Microsoft Teams</strong> account, and a <strong>Teams admin</strong> to approve the app for your org (a one-time consent).</li>
+      <li>A <strong>CI/CD, GitOps, or observability tool</strong> you can add a webhook to — GitHub Actions, GitLab, Jenkins, Azure DevOps, Bitbucket, CircleCI, Buildkite, Argo CD, TeamCity, Datadog, or anything that can POST JSON.</li>
+      <li>Two minutes of that platform's admin's time to paste in a URL.</li>
+    </ul>
+
+    <h2 id="install">Step 1 · Install the app in Teams</h2>
+    <div class="step">
+      <div class="num">1</div>
+      <div class="body">
+        <p>Open Teams → <strong>Apps</strong> → search <em>Per My Last Webhook</em> → <strong>Add</strong>.
+        (Or use the <a href="/#install">install link</a> on our homepage.)</p>
+        <p>The first person from your organization to add it triggers a one-time
+        <strong>admin consent</strong> — your Teams admin approves the app for the tenant. After
+        that, anyone in your org can use it.</p>
+        <div class="callout tip">
+          <div class="bar">Tip</div>
+          <div class="inner"><p>Not an admin? Add the app anyway — Teams will prompt your admin to approve it,
+          or you can send them the consent link the app shows you.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="destination">Step 2 · Choose where cards go</h2>
+    <p>Every subscription delivers to exactly one destination. Pick the one that fits:</p>
+    <div class="next-grid">
+      <div class="card">
+        <h3>Teams channel</h3>
+        <p>Add the bot to a channel and cards post there. Supports in-place updates (one card that
+        goes red → green) and incident collapsing. Best for team visibility.</p>
+      </div>
+      <div class="card">
+        <h3>Direct message <span class="pill-pro">PRO</span></h3>
+        <p>The bot DMs a person — perfect for the on-call owner. The person adds the app once, then
+        appears in the picker.</p>
+      </div>
+      <div class="card">
+        <h3>Incoming webhook</h3>
+        <p>Paste a Teams Workflows / Power Automate incoming-webhook URL. No bot install needed. Simple,
+        one-directional.</p>
+      </div>
+    </div>
+    <div class="callout note">
+      <div class="bar">To post in a channel</div>
+      <div class="inner"><p>In the channel, open <strong>… → Manage channel → Connectors/Apps</strong> (or @mention the
+      bot) to add <em>Per My Last Webhook</em>. Once it's in the channel it shows up in the subscription
+      form's channel picker. For a DM destination, the person just needs to open a 1:1 chat with the bot once.</p></div>
+    </div>
+
+    <h2 id="subscription">Step 3 · Create your first subscription</h2>
+    <div class="step">
+      <div class="num">1</div>
+      <div class="body"><p>Open the app's <strong>Subscriptions</strong> tab → <strong>New subscription</strong>.</p></div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div class="body">
+        <p>Give it a <strong>name</strong>, pick your <strong>platform</strong>, and choose the
+        <strong>destination</strong> from Step 2.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div class="body">
+        <p>Save. You'll get an <strong>ingest URL</strong> with a secret key baked in — it looks like:</p>
+        <pre><code>https://api.permylastwebhook.com/api/ingest/&lt;org&gt;/&lt;sub&gt;/github?key=&lt;secret&gt;</code></pre>
+        <div class="callout warn">
+          <div class="bar">Copy it now</div>
+          <div class="inner"><p>The key is shown <strong>once</strong>. Copy the full URL immediately. Lost it? Use
+          <strong>Rotate key</strong> on the subscription to mint a fresh one (and update your platform).</p></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="connect">Step 4 · Connect your platform</h2>
+    <p>Paste that ingest URL into your platform's webhook settings. Jump to yours:</p>
+    <div class="platform-grid">
+      <a href="#gh">GitHub</a><a href="#gl">GitLab</a><a href="#jk">Jenkins</a><a href="#ado">Azure DevOps</a>
+      <a href="#bb">Bitbucket</a><a href="#cc">CircleCI</a><a href="#bk">Buildkite</a><a href="#argocd">Argo CD</a><a href="#teamcity">TeamCity</a><a href="#datadog">Datadog</a><a href="#grafana">Grafana</a><a href="#drone">Drone</a><a href="#sentry">Sentry</a><a href="#pagerduty">PagerDuty</a><a href="#alertmanager">Alertmanager</a><a href="#octopus">Octopus</a><a href="#generic">Generic</a>
+    </div>
+
+    <h3 id="gh">GitHub Actions</h3>
+    <ol>
+      <li>Repo → <strong>Settings → Webhooks → Add webhook</strong>.</li>
+      <li><strong>Payload URL</strong>: your ingest URL. <strong>Content type</strong>: <code>application/json</code>.</li>
+      <li><strong>Events</strong>: <em>Let me select individual events</em> → check <strong>Workflow runs</strong> only.</li>
+      <li>Add webhook. Prefer org-wide? Set it at <strong>Org → Settings → Webhooks</strong> instead.</li>
+    </ol>
+
+    <h3 id="gl">GitLab</h3>
+    <ol>
+      <li>Project (or Group) → <strong>Settings → Webhooks</strong>.</li>
+      <li><strong>URL</strong>: your ingest URL. <strong>Triggers</strong>: <em>Pipeline events</em> and <em>Deployment events</em>.</li>
+      <li>Keep SSL verification on → <strong>Add webhook</strong>.</li>
+    </ol>
+
+    <h3 id="jk">Jenkins</h3>
+    <ol>
+      <li>Install the <strong>Notification Plugin</strong> (Manage Plugins).</li>
+      <li>Job → <strong>Configure → Job Notifications → Add Endpoint</strong>.</li>
+      <li><strong>Format</strong> JSON, <strong>Protocol</strong> HTTP, <strong>Event</strong> <em>Job Finalized</em>, <strong>URL</strong> your ingest URL. Save.</li>
+    </ol>
+
+    <h3 id="ado">Azure DevOps</h3>
+    <ol>
+      <li>Project → <strong>Project Settings → Service Hooks → New Subscription → Web Hooks</strong>.</li>
+      <li><strong>Trigger</strong>: <em>Run state changed</em> (YAML) or <em>Build completed</em> (classic).</li>
+      <li><strong>URL</strong>: your ingest URL. Optionally filter by pipeline/branch/state. Save.</li>
+    </ol>
+
+    <h3 id="bb">Bitbucket Pipelines</h3>
+    <ol>
+      <li>Repo → <strong>Repository settings → Webhooks → Add webhook</strong>.</li>
+      <li><strong>URL</strong>: your ingest URL. <strong>Triggers → Build</strong>: <em>Commit status created</em> and <em>updated</em>.</li>
+    </ol>
+
+    <h3 id="cc">CircleCI</h3>
+    <ol>
+      <li>Project → <strong>Project Settings → Webhooks</strong>.</li>
+      <li><strong>Webhook URL</strong>: your ingest URL. <strong>Events</strong>: <em>workflow-completed</em> (recommended).</li>
+    </ol>
+
+    <h3 id="bk">Buildkite</h3>
+    <ol>
+      <li><strong>Organization settings → Notification services → Add Webhook</strong>.</li>
+      <li><strong>Webhook URL</strong>: your ingest URL. Pick the build events you want delivered.</li>
+    </ol>
+
+    <h3 id="argocd">Argo CD</h3>
+    <ol>
+      <li>Create the subscription with platform <strong>Argo CD</strong> and copy the ingest URL.</li>
+      <li>In Argo CD's <code>argocd-notifications-cm</code>, add a webhook service pointing at that URL plus a template that POSTs the app's sync/health status.</li>
+      <li>Subscribe your Applications to a trigger (e.g. <em>on-deploy</em>). Full config + template in the <a href="platforms.html#argocd">platform reference</a>.</li>
+    </ol>
+
+    <h3 id="teamcity">TeamCity</h3>
+    <ol>
+      <li>Create the subscription with platform <strong>TeamCity</strong> and copy the ingest URL.</li>
+      <li>Add a webhook to the build config (native <em>Webhooks</em> feature or the tcWebHooks plugin) with a JSON template posting the build name, number, result, branch, and commit. Template in the <a href="platforms.html#teamcity">platform reference</a>.</li>
+    </ol>
+
+    <h3 id="datadog">Datadog</h3>
+    <ol>
+      <li>Create the subscription with platform <strong>Datadog</strong> and copy the ingest URL.</li>
+      <li>Datadog → <strong>Integrations → Webhooks</strong> → add the URL with a JSON payload (title, alert status, link), then reference <code>@webhook-&lt;name&gt;</code> in your monitor. Payload in the <a href="platforms.html#datadog">platform reference</a>.</li>
+    </ol>
+
+    <h3 id="grafana">Grafana</h3>
+    <ol>
+      <li>Create the subscription with platform <strong>Grafana</strong> and copy the ingest URL.</li>
+      <li>Grafana → <strong>Alerting → Contact points</strong> → add a <em>Webhook</em> contact point with that URL (no template needed), then attach it to a notification policy. <a href="platforms.html#grafana">Reference</a>.</li>
+    </ol>
+
+    <h3 id="drone">Drone CI</h3>
+    <ol>
+      <li>Create the subscription with platform <strong>Drone</strong> and copy the ingest URL.</li>
+      <li>Add a Drone webhook (global or per-repo) pointing at that URL — the payload is normalized automatically. <a href="platforms.html#drone">Reference</a>.</li>
+    </ol>
+
+    <h3 id="sentry">Sentry</h3>
+    <ol>
+      <li>Create the subscription with platform <strong>Sentry</strong> and copy the ingest URL.</li>
+      <li>Sentry → <strong>Alerts</strong> → create an alert rule with a webhook action posting title + level + project to that URL. <a href="platforms.html#sentry">Reference</a>.</li>
+    </ol>
+
+    <h3 id="pagerduty">PagerDuty</h3>
+    <ol>
+      <li>Create the subscription with platform <strong>PagerDuty</strong> and copy the ingest URL.</li>
+      <li>PagerDuty → <strong>Integrations → Generic Webhooks (v3)</strong> → point a new webhook at that URL and subscribe to incident events. <a href="platforms.html#pagerduty">Reference</a>.</li>
+    </ol>
+
+    <h3 id="alertmanager">Prometheus Alertmanager</h3>
+    <ol>
+      <li>Create the subscription with platform <strong>Alertmanager</strong> and copy the ingest URL.</li>
+      <li>Add a <code>webhook_configs</code> receiver with <code>url</code> = that URL and route alerts to it (no template). <a href="platforms.html#alertmanager">Reference</a>.</li>
+    </ol>
+
+    <h3 id="octopus">Octopus Deploy</h3>
+    <ol>
+      <li>Create the subscription with platform <strong>Octopus</strong> and copy the ingest URL.</li>
+      <li>Octopus → <strong>Configuration → Subscriptions</strong> → add a deployment-event subscription posting project/environment/release/state to that URL. <a href="platforms.html#octopus">Reference</a>.</li>
+    </ol>
+
+    <h3 id="generic">Anything else (generic)</h3>
+    <p>Any tool that can POST JSON works via the <code>generic</code> platform. Create the subscription
+    with a small <strong>field mapping</strong> (which JSON paths map to title / status / link), then point
+    the tool's webhook at your ingest URL. Datadog monitors, custom scripts, home-grown CI — all fair game.</p>
+
+    <div class="callout tip">
+      <div class="bar">Advanced · webhook signing</div>
+      <div class="inner"><p>GitHub, GitLab, CircleCI and Buildkite can sign payloads with a shared secret for an
+      extra integrity check. It's optional — the secret key in your ingest URL already authenticates every
+      call. See the platform reference for the signing setup.</p></div>
+    </div>
+
+    <h2 id="verify">Step 5 · Fire a test card</h2>
+    <p>Don't want to wait for a real build? On the subscription, click <strong>Test</strong> — it sends a
+    synthetic card straight through your delivery path so you can confirm the wiring. Then trigger a real
+    pipeline run and watch the card land, live.</p>
+    <div class="callout note">
+      <div class="bar">Nothing showed up?</div>
+      <div class="inner"><p>Jump to <a href="#trouble">Troubleshooting</a> — 90% of the time it's the channel
+      not having the bot, a filter hiding the event, or a webhook pointed at the wrong URL.</p></div>
+    </div>
+
+    <h2 id="next">Next steps</h2>
+    <div class="next-grid">
+      <div class="card"><h3>Routing <span class="pill-pro">PRO</span></h3><p>Send prod failures to #prod-alerts and everything else to #ci — by branch, environment, or status.</p></div>
+      <div class="card"><h3>Incident mode <span class="pill-pro">PRO</span></h3><p>Collapse a flapping pipeline's repeated failures into one card that updates in place, then resolves.</p></div>
+      <div class="card"><h3>On-call DMs <span class="pill-pro">PRO</span></h3><p>DM the owner the moment their deploy breaks, instead of hoping they see the channel.</p></div>
+      <div class="card"><h3>Quiet hours &amp; dedupe <span class="pill-pro">PRO</span></h3><p>Mute overnight, and suppress the same failure firing on a loop.</p></div>
+      <div class="card"><h3>Approvals <span class="pill-pro">PRO</span></h3><p>Gate a deploy behind an approve/reject card right in Teams, with an audit trail.</p></div>
+      <div class="card"><h3>Status filters</h3><p>Only care about failures? Filter to just the statuses you want — on any plan.</p></div>
+    </div>
+
+    <h2 id="trouble">Troubleshooting</h2>
+    <h3>The card never arrived</h3>
+    <ul>
+      <li><strong>Channel destination:</strong> is the bot actually in that channel? Re-add it, then re-pick it on the subscription.</li>
+      <li><strong>Status filter:</strong> a filter or quiet-hours window may be dropping the event by design. Loosen it and re-test.</li>
+      <li><strong>Wrong URL / key:</strong> confirm the platform's webhook uses the exact ingest URL. Rotated the key? Update the platform.</li>
+      <li><strong>Platform event type:</strong> we accept specific events (e.g. GitHub <em>Workflow runs</em> only). Sending others returns an error.</li>
+    </ul>
+    <h3>Can't sign in / "not installed" / access denied</h3>
+    <p>Open the app's <strong>Diagnostics</strong> tab and click <strong>Run checks</strong>. It walks the exact
+    sign-in gate — token validity → tenant consent → your admin role — and tells you which step failed and how to
+    fix it (with the matching AADSTS code for consent/redirect issues).</p>
+    <h3>"This person hasn't added the app" on a DM subscription</h3>
+    <p>DMs need the recipient to have opened a 1:1 chat with the bot once (that's how Teams lets a bot message them).
+    Ask them to search for the app in Teams and say "hi" — they'll then appear in the DM picker.</p>
+
+    <div class="callout tip">
+      <div class="bar">Still stuck?</div>
+      <div class="inner"><p>Email <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a> with your org name and what you
+      tried — we'll get you unblocked.</p></div>
+    </div>
+  </main>
+</div>
+</div>
+
+<div class="taskbar">
+  <span class="start">▣ Start</span>
+  <span class="seg">PER MY LAST WEBHOOK</span>
+  <span class="seg">C:\DOCS\GETTING-STARTED</span>
+  <span class="clock">Status: 200 OK</span>
+</div>
+</body>
+</html>

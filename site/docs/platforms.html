@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Platform reference — Per My Last Webhook docs</title>
+<meta name="description" content="Detailed webhook setup and status mappings for GitHub Actions, GitLab, Jenkins, Azure DevOps, Bitbucket, CircleCI, Buildkite, and generic JSON sources." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a>
+  <nav class="site-nav">
+    <a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/#install">Install</a>
+    <a href="/validator/">Validator</a><a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<div class="docs-shell">
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="side-title">Start here</div>
+    <ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+    <div class="side-title">Guides</div>
+    <ul>
+      <li><a href="platforms.html" class="active">Platform reference</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing &amp; plans</a></li>
+    </ul>
+    <div class="side-title">Platforms</div>
+    <ul>
+      <li><a href="#github">GitHub Actions</a></li>
+      <li><a href="#gitlab">GitLab</a></li>
+      <li><a href="#jenkins">Jenkins</a></li>
+      <li><a href="#ado">Azure DevOps</a></li>
+      <li><a href="#bitbucket">Bitbucket</a></li>
+      <li><a href="#circleci">CircleCI</a></li>
+      <li><a href="#buildkite">Buildkite</a></li>
+      <li><a href="#argocd">Argo CD</a></li>
+      <li><a href="#teamcity">TeamCity</a></li>
+      <li><a href="#datadog">Datadog</a></li>
+      <li><a href="#grafana">Grafana</a></li>
+      <li><a href="#drone">Drone CI</a></li>
+      <li><a href="#sentry">Sentry</a></li>
+      <li><a href="#pagerduty">PagerDuty</a></li>
+      <li><a href="#alertmanager">Alertmanager</a></li>
+      <li><a href="#octopus">Octopus Deploy</a></li>
+      <li><a href="#generic">Generic JSON</a></li>
+    </ul>
+    <div class="side-title">Help</div>
+    <ul><li><a href="faq.html">FAQ</a></li><li><a href="getting-started.html#trouble">Troubleshooting</a></li></ul>
+  </aside>
+
+  <main class="docs-content">
+    <div class="crumbs"><a href="/docs/">Docs</a> / Platform reference</div>
+    <h1>Platform reference</h1>
+    <p class="lede">
+      For every platform the recipe is the same: create a subscription, copy its ingest URL, and paste it
+      into the platform's webhook config. This page has the exact events we accept, the setup steps, optional
+      signing, and how each platform's states map to card statuses.
+    </p>
+    <div class="callout note"><div class="bar">Optional signing</div><div class="inner"><p>The secret key in your
+    ingest URL already authenticates every call. Several platforms can <em>additionally</em> sign the payload with a
+    shared secret for integrity — that secret is configured by whoever operates your deployment. It's optional and
+    called out per platform below.</p></div></div>
+
+    <h2 id="github">GitHub Actions</h2>
+    <p><strong>Accepts:</strong> the <code>workflow_run</code> event only (other events are rejected).</p>
+    <ol>
+      <li>Repo → <strong>Settings → Webhooks → Add webhook</strong>.</li>
+      <li><strong>Payload URL</strong>: your ingest URL. <strong>Content type</strong>: <code>application/json</code>.</li>
+      <li><strong>Events</strong> → <em>Let me select individual events</em> → check <strong>Workflow runs</strong> only.</li>
+      <li>Add webhook. For all repos at once, configure it at <strong>Org → Settings → Webhooks</strong>.</li>
+    </ol>
+    <p><strong>Signing (optional):</strong> set a webhook secret; we verify <code>X-Hub-Signature-256</code>.</p>
+    <pre><code>action + conclusion              → status
+requested / in_progress          → started
+completed + success/neutral/skip → success
+completed + failure/timed_out    → failure
+completed + cancelled            → cancelled</code></pre>
+
+    <h2 id="gitlab">GitLab</h2>
+    <p><strong>Accepts:</strong> Pipeline events (<code>object_kind: pipeline</code>) and Deployment events.</p>
+    <ol>
+      <li>Project (or Group) → <strong>Settings → Webhooks</strong>.</li>
+      <li><strong>URL</strong>: your ingest URL. <strong>Triggers</strong>: <em>Pipeline events</em> + <em>Deployment events</em>.</li>
+      <li>Keep SSL verification on → <strong>Add webhook</strong>. Group webhooks apply to all child projects.</li>
+    </ol>
+    <p><strong>Signing (optional):</strong> a secret token, sent verbatim in <code>X-Gitlab-Token</code>.</p>
+    <pre><code>pipeline status              → status        deployment status → status
+pending / running            → started        running           → deployment_started
+success                      → success        success           → deployment_success
+failed                       → failure        failed / canceled → deployment_failure
+canceled / skipped / manual  → cancelled</code></pre>
+
+    <h2 id="jenkins">Jenkins</h2>
+    <p><strong>Accepts:</strong> the Notification Plugin payload (the de-facto Jenkins standard).</p>
+    <ol>
+      <li>Install the <strong>Notification Plugin</strong> (Manage Plugins).</li>
+      <li>Job → <strong>Configure → Job Notifications → Add Endpoint</strong>.</li>
+      <li><strong>Format</strong> JSON · <strong>Protocol</strong> HTTP · <strong>Event</strong> <em>Job Finalized</em> (or <em>All Events</em> for started cards) · <strong>URL</strong> your ingest URL. Save.</li>
+    </ol>
+    <pre><code>phase / status                 → status
+STARTED / QUEUED               → started
+FINALIZED + SUCCESS            → success
+FINALIZED + UNSTABLE           → unstable
+FINALIZED + ABORTED            → cancelled
+FINALIZED + FAILURE/NOT_BUILT  → failure</code></pre>
+
+    <h2 id="ado">Azure DevOps</h2>
+    <p><strong>Accepts:</strong> <code>run-state-changed</code> (YAML pipelines) and <code>build.complete</code> (classic).</p>
+    <ol>
+      <li>Project → <strong>Project Settings → Service Hooks → New Subscription → Web Hooks</strong>.</li>
+      <li><strong>Trigger</strong>: <em>Run state changed</em> (YAML) or <em>Build completed</em> (classic). Optionally filter by pipeline/branch/state.</li>
+      <li><strong>URL</strong>: your ingest URL. Save.</li>
+    </ol>
+    <pre><code>state / result                       → status
+inProgress / queued / notStarted     → started
+result=succeeded                     → success
+result=partiallySucceeded            → unstable
+result=canceled                      → cancelled
+any other terminal result            → failure</code></pre>
+
+    <h2 id="bitbucket">Bitbucket Pipelines</h2>
+    <p><strong>Accepts:</strong> <code>repo:commit_status_created</code> / <code>updated</code> events.</p>
+    <ol>
+      <li>Repo → <strong>Repository settings → Webhooks → Add webhook</strong>.</li>
+      <li><strong>URL</strong>: your ingest URL. <strong>Triggers → Build</strong>: <em>Commit status created</em> + <em>updated</em>.</li>
+    </ol>
+    <p>Bitbucket Cloud doesn't sign payloads — the ingest-URL key is the authentication on that path.</p>
+    <pre><code>commit_status.state → status
+INPROGRESS          → started
+SUCCESSFUL          → success
+FAILED              → failure
+STOPPED             → cancelled</code></pre>
+
+    <h2 id="circleci">CircleCI</h2>
+    <p><strong>Accepts:</strong> v2 <code>workflow-completed</code> (preferred) and <code>job-completed</code>.</p>
+    <ol>
+      <li>Project → <strong>Project Settings → Webhooks</strong>.</li>
+      <li><strong>Webhook URL</strong>: your ingest URL. <strong>Events</strong>: <em>workflow-completed</em>.</li>
+    </ol>
+    <p><strong>Signing (optional):</strong> a secret; we verify <code>Circleci-Signature: v1=…</code> (HMAC-SHA256).</p>
+    <pre><code>status                            → status
+success                           → success
+failed / error / unauthorized     → failure
+canceled / not_run / on_hold      → cancelled</code></pre>
+
+    <h2 id="buildkite">Buildkite</h2>
+    <p><strong>Accepts:</strong> <code>build.scheduled/started/running/finished</code> events.</p>
+    <ol>
+      <li><strong>Organization settings → Notification services → Add Webhook</strong>.</li>
+      <li><strong>Webhook URL</strong>: your ingest URL. Pick the build events you want.</li>
+    </ol>
+    <p><strong>Signing (optional):</strong> a token verified against <code>BUILDKITE_WEBHOOK_TOKEN</code>.</p>
+    <pre><code>event / build.state                       → status
+scheduled / started / running             → started
+passed                                    → success
+failed                                    → failure
+canceled / skipped / not_run / blocked    → cancelled</code></pre>
+
+    <h2 id="argocd">Argo CD</h2>
+    <p><strong>Accepts:</strong> a purpose-built notification payload (Argo CD notifications are
+    template-driven, so you define the body). Argo CD is a CD tool, so events render as
+    <em>deployment</em> cards.</p>
+    <p>In your <code>argocd-notifications-cm</code> ConfigMap, add a webhook service, a template that
+    POSTs the app's status, and a trigger — then annotate the Applications you want notified:</p>
+    <pre><code>service.webhook.pmlw: |
+  url: &lt;your ingest URL&gt;
+  headers: [{ name: Content-Type, value: application/json }]
+
+template.pmlw-deploy: |
+  webhook:
+    pmlw:
+      method: POST
+      body: |
+        {
+          "app": "{{.app.metadata.name}}",
+          "project": "{{.app.spec.project}}",
+          "syncStatus": "{{.app.status.sync.status}}",
+          "healthStatus": "{{.app.status.health.status}}",
+          "operationPhase": "{{.app.status.operationState.phase}}",
+          "revision": "{{.app.status.sync.revision}}",
+          "appUrl": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}"
+        }
+
+trigger.on-deploy: |
+  - when: app.status.operationState.phase in ['Succeeded','Failed','Error','Running']
+    send: [pmlw-deploy]</code></pre>
+    <p>Then on each Application:
+    <code>notifications.argoproj.io/subscribe.on-deploy.pmlw: ""</code>.</p>
+    <pre><code>operationPhase / health / sync    → status
+Succeeded                         → deployment_success
+Failed / Error                    → deployment_failure
+Running / Terminating             → deployment_started
+(no phase) Degraded / Missing     → deployment_failure
+(no phase) Progressing / Suspended→ deployment_started
+(no phase) Healthy + Synced       → deployment_success</code></pre>
+
+    <h2 id="teamcity">TeamCity</h2>
+    <p><strong>Accepts:</strong> a purpose-built JSON payload. TeamCity webhooks — the native
+    <em>Webhooks</em> build feature or the <strong>tcWebHooks</strong> plugin — are template-driven,
+    so you map TeamCity build parameters into these fields:</p>
+    <ol>
+      <li>On the build configuration, add a webhook (native feature or tcWebHooks) with <strong>URL</strong> = your ingest URL.</li>
+      <li>Set the payload template to produce this JSON:</li>
+    </ol>
+    <pre><code>{
+  "buildName": "&lt;project&gt; :: &lt;build config&gt;",
+  "buildNumber": "128",
+  "buildResult": "success",       // success | failure | running | canceled | unstable
+  "branch": "main",
+  "commitSha": "&lt;vcs revision&gt;",
+  "buildUrl": "&lt;server&gt;/build/&lt;id&gt;"
+}</code></pre>
+    <pre><code>buildResult      → status
+success          → success
+running          → started
+unstable         → unstable
+canceled         → cancelled
+failure / error  → failure</code></pre>
+
+    <h2 id="datadog">Datadog</h2>
+    <p><strong>Accepts:</strong> a purpose-built JSON payload built from Datadog's webhook template
+    variables. Datadog is observability, so a monitor alert renders as a status card.</p>
+    <ol>
+      <li>Datadog → <strong>Integrations → Webhooks → New</strong>. <strong>URL</strong> = your ingest URL.</li>
+      <li>Set the <strong>Payload</strong> to:</li>
+    </ol>
+    <pre><code>{
+  "title": "$EVENT_TITLE",
+  "alertStatus": "$ALERT_STATUS",
+  "priority": "$PRIORITY",
+  "tags": "$TAGS",
+  "eventUrl": "$LINK",
+  "id": "$ID",
+  "date": "$DATE"
+}</code></pre>
+    <ol start="3"><li>In each monitor's notification message, add <code>@webhook-&lt;name&gt;</code> to fire it.</li></ol>
+    <pre><code>alertStatus      → status
+Recovery / OK    → success
+Warn / No Data   → unstable
+Alert            → failure</code></pre>
+
+    <h2 id="grafana">Grafana</h2>
+    <p><strong>Accepts:</strong> the Grafana unified-alerting webhook payload — it's fixed, so no
+    template is needed. <code>status: firing</code> → failure, <code>resolved</code> → success.</p>
+    <ol>
+      <li>Grafana → <strong>Alerting → Contact points → Add contact point</strong> → type <strong>Webhook</strong>.</li>
+      <li><strong>URL</strong>: your ingest URL. Save, then attach it to a notification policy.</li>
+    </ol>
+    <pre><code>status    → status
+firing    → failure
+resolved  → success</code></pre>
+
+    <h2 id="drone">Drone CI</h2>
+    <p><strong>Accepts:</strong> Drone's <code>build</code> webhook payload — fixed, no template.</p>
+    <ol>
+      <li>Add a webhook (global via <code>DRONE_WEBHOOK_ENDPOINT</code>, or repo settings) → <strong>URL</strong>: your ingest URL.</li>
+    </ol>
+    <pre><code>build.status         → status
+success              → success
+running / pending    → started
+killed / skipped     → cancelled
+failure / error      → failure</code></pre>
+
+    <h2 id="sentry">Sentry</h2>
+    <p><strong>Accepts:</strong> a purpose-built JSON payload (Sentry's webhook shapes vary by
+    integration, so you define the body in an alert rule's webhook action).</p>
+    <ol>
+      <li>Sentry → <strong>Alerts → Create Alert Rule</strong> → add a webhook / internal-integration action with your ingest URL.</li>
+      <li>Send this JSON:</li>
+    </ol>
+    <pre><code>{
+  "title": "&lt;issue title&gt;",
+  "level": "error",          // fatal | error | warning | info
+  "status": "unresolved",    // unresolved | resolved | ignored
+  "project": "&lt;project&gt;",
+  "environment": "production",
+  "url": "&lt;issue url&gt;"
+}</code></pre>
+    <pre><code>status / level             → status
+status resolved            → success
+status ignored             → cancelled
+level warning              → unstable
+fatal / error / (default)  → failure</code></pre>
+
+    <h2 id="pagerduty">PagerDuty</h2>
+    <p><strong>Accepts:</strong> the PagerDuty v3 generic-webhook payload (fixed — no template).
+    Incident lifecycle maps onto a status.</p>
+    <ol>
+      <li>PagerDuty → <strong>Integrations → Generic Webhooks (v3) → New Webhook</strong>.</li>
+      <li><strong>Webhook URL</strong>: your ingest URL. Subscribe to incident events.</li>
+    </ol>
+    <pre><code>event_type / status       → status
+incident.resolved         → success
+incident.acknowledged     → started
+incident.triggered / etc. → failure</code></pre>
+
+    <h2 id="alertmanager">Prometheus Alertmanager</h2>
+    <p><strong>Accepts:</strong> the Alertmanager <code>webhook_configs</code> payload (fixed — no template).
+    <code>status: firing</code> → failure, <code>resolved</code> → success.</p>
+    <pre><code>route:
+  receiver: pmlw
+receivers:
+  - name: pmlw
+    webhook_configs:
+      - url: &lt;your ingest URL&gt;</code></pre>
+
+    <h2 id="octopus">Octopus Deploy</h2>
+    <p><strong>Accepts:</strong> a purpose-built JSON payload (Octopus subscription webhooks are event-category
+    driven, so you shape the body). Octopus is a CD tool → deployment cards.</p>
+    <ol>
+      <li>Octopus → <strong>Configuration → Subscriptions</strong> → new subscription for deployment events, with a webhook to your ingest URL.</li>
+      <li>Body:</li>
+    </ol>
+    <pre><code>{
+  "project": "Web Storefront",
+  "environment": "Production",
+  "release": "2.3.0",
+  "state": "Success",   // Success | Failed | Executing | Queued | Canceled
+  "deploymentUrl": "&lt;deployment url&gt;"
+}</code></pre>
+    <pre><code>state                       → status
+Success                     → deployment_success
+Executing / Queued          → deployment_started
+Failed / TimedOut / Canceled→ deployment_failure</code></pre>
+
+    <h2 id="generic">Generic JSON</h2>
+    <p>Anything that can POST JSON works via the <code>generic</code> platform. When you create the subscription,
+    supply a <strong>field mapping</strong> — declarative paths into the payload for <code>title</code>,
+    <code>status</code>, <code>link</code>, <code>summary</code>, and optional facts, plus a
+    <code>statusMap</code> that maps your raw status strings to <code>success / failure / running / neutral</code>.
+    Then point the tool's webhook at your ingest URL. Great for Datadog monitors, custom scripts, or any CI we
+    don't have a dedicated normalizer for yet.</p>
+
+    <div class="callout tip"><div class="bar">Don't see your tool?</div><div class="inner"><p>The generic platform
+    covers most cases. Want a first-class normalizer (TeamCity, Argo CD, Drone…)? <a href="mailto:{{CONTACT_EMAIL}}">Tell us</a>
+    — it's a mechanical add and we prioritize by demand.</p></div></div>
+  </main>
+</div>
+</div>
+
+<div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\PLATFORMS</span><span class="clock">Status: 200 OK</span></div>
+</body>
+</html>

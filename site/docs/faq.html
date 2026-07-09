@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FAQ — Per My Last Webhook docs</title>
+<meta name="description" content="Frequently asked questions about Per My Last Webhook: platforms, plans, data handling, security, install/consent, and how it replaces Office 365 Connectors." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a>
+  <nav class="site-nav">
+    <a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/#install">Install</a>
+    <a href="/validator/">Validator</a><a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<div class="docs-shell">
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="side-title">Start here</div>
+    <ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+    <div class="side-title">Guides</div>
+    <ul>
+      <li><a href="migrate-from-office-365-connectors.html">Migrate from O365 Connectors</a></li>
+      <li><a href="platforms.html">Platform reference</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing &amp; plans</a></li>
+    </ul>
+    <div class="side-title">Help</div>
+    <ul><li><a href="faq.html" class="active">FAQ</a></li><li><a href="getting-started.html#trouble">Troubleshooting</a></li></ul>
+  </aside>
+
+  <main class="docs-content">
+    <div class="crumbs"><a href="/docs/">Docs</a> / FAQ</div>
+    <h1>FAQ</h1>
+    <p class="lede">Quick answers to the questions we hear most. Still stuck? Email
+    <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>.</p>
+
+    <h2>The basics</h2>
+    <h3>What is Per My Last Webhook?</h3>
+    <p>A Microsoft Teams app that turns CI/CD pipeline events into rich Adaptive Cards in your channels. It's the
+    drop-in successor to the deprecated Office 365 / Teams Connectors — same idea (webhook in, card out), but
+    normalized across sixteen platforms with routing, noise controls, and an audit trail.</p>
+
+    <h3>Which platforms are supported?</h3>
+    <p>GitHub Actions, GitLab, Jenkins, Azure DevOps, Bitbucket Pipelines, CircleCI, Buildkite, Argo CD, TeamCity,
+    Datadog, Grafana, Drone CI, Sentry, PagerDuty, Prometheus Alertmanager, and Octopus Deploy have dedicated support. Anything else that can POST JSON works through the
+    <a href="platforms.html#generic">generic</a> platform with a field mapping.</p>
+
+    <h3>Does this replace the retired Office 365 Connectors?</h3>
+    <p>Yes — that's exactly why it exists. Microsoft wound down Connectors; this fills the gap with a proper Teams
+    app (bot + tabs + SSO) instead of a bare incoming webhook.</p>
+
+    <h2>Setup &amp; install</h2>
+    <h3>Do I need to be a Teams admin?</h3>
+    <p>Only for the one-time approval. The first person to add the app triggers admin consent for your tenant;
+    after that, anyone in your org can create subscriptions. Not an admin? Add it anyway and Teams will route the
+    approval to one.</p>
+
+    <h3>Do I have to add the bot to use it?</h3>
+    <p>No. If you'd rather not use the bot, pick the <strong>incoming webhook</strong> destination and paste a Teams
+    Workflows URL. You'll miss bot-only features (in-place updates, incident mode, DMs), but basic delivery needs no bot.</p>
+
+    <h3>How do I test without a real build?</h3>
+    <p>Every subscription has a <strong>Test</strong> button that fires a synthetic card through the real delivery path.
+    You can also preview any payload in the <a href="/validator/">card validator</a> before wiring anything up.</p>
+
+    <h2>Plans &amp; billing</h2>
+    <h3>Is there a free tier?</h3>
+    <p>Yes — Free covers all sixteen platforms, rich cards, channel/webhook delivery, status filters, and up to three
+    subscriptions. See <a href="pricing.html">Pricing &amp; plans</a>.</p>
+
+    <h3>What's behind Pro?</h3>
+    <p>Scale and workflow: unlimited subscriptions, routing, incident mode, on-call DMs, quiet hours/dedupe, @mentions,
+    approvals, and custom branding. Pro is a flat price per tenant — no per-seat billing.</p>
+
+    <h2>Security &amp; data</h2>
+    <h3>What data do you store?</h3>
+    <p>Your subscription config (names, filters, destinations), the minimum needed to deliver, and an audit trail of
+    changes/approvals. Delivery secrets (webhook URLs, API-key hashes) are stored hashed or as encrypted references —
+    never in plaintext logs. We don't store your source code or build artifacts.</p>
+
+    <h3>How is the ingest URL secured?</h3>
+    <p>Each subscription's ingest URL carries a unique secret key that authenticates every call, compared in constant
+    time. Several platforms can additionally sign the payload (HMAC) for integrity. You can rotate the key any time.</p>
+
+    <h3>How does sign-in work?</h3>
+    <p>Management (the tabs/admin UI) uses Microsoft Entra SSO. A token is only honored if it comes from a tenant that
+    completed admin consent <em>and</em> the user holds the admin app role — a two-stage gate. If sign-in ever fails,
+    the in-app <strong>Diagnostics</strong> tab tells you exactly which stage and how to fix it.</p>
+
+    <h3>Is delivery reliable?</h3>
+    <p>Transient failures are retried with backoff, timeouts are handled so you don't get duplicate cards, and each
+    org has its own rate limit so a noisy tenant can't affect others.</p>
+
+    <h2>Troubleshooting</h2>
+    <h3>My card didn't show up.</h3>
+    <p>Usually the bot isn't in the channel, a filter/quiet-hours window is dropping the event, or the webhook points
+    at the wrong URL. Walk the checklist in <a href="getting-started.html#trouble">Troubleshooting</a>.</p>
+
+    <h3>Sign-in / "not installed" / access denied.</h3>
+    <p>Open the <strong>Diagnostics</strong> tab and run the checks — it pinpoints consent, tenant-install, and
+    app-role issues with the matching fix.</p>
+
+    <div class="callout tip"><div class="bar">Didn't find it?</div><div class="inner"><p>Email
+    <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a> — we answer.</p></div></div>
+  </main>
+</div>
+</div>
+
+<div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\FAQ</span><span class="clock">Status: 200 OK</span></div>
+</body>
+</html>

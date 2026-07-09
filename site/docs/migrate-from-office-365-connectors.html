@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Migrate from Office 365 Connectors to Microsoft Teams — Per My Last Webhook</title>
+<meta name="description" content="Office 365 / Teams Connectors are retired. Here's how to migrate your CI/CD webhook notifications to Microsoft Teams with a modern replacement — step by step, no lost coverage." />
+<link rel="canonical" href="https://permylastwebhook.com/docs/migrate-from-office-365-connectors.html" />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a>
+  <nav class="site-nav">
+    <a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/integrations/">Integrations</a>
+    <a href="/#install">Install</a><a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<div class="docs-shell">
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="side-title">Start here</div>
+    <ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+    <div class="side-title">Guides</div>
+    <ul>
+      <li><a href="migrate-from-office-365-connectors.html" class="active">Migrate from O365 Connectors</a></li>
+      <li><a href="platforms.html">Platform reference</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing &amp; plans</a></li>
+    </ul>
+    <div class="side-title">This page</div>
+    <ul>
+      <li><a href="#what-happened">What happened</a></li>
+      <li><a href="#why-not-webhook">Why the webhook fallback falls short</a></li>
+      <li><a href="#mapping">Old connector → new subscription</a></li>
+      <li><a href="#steps">Migration steps</a></li>
+      <li><a href="#faq">Migration FAQ</a></li>
+    </ul>
+    <div class="side-title">Help</div>
+    <ul><li><a href="faq.html">FAQ</a></li><li><a href="getting-started.html#trouble">Troubleshooting</a></li></ul>
+  </aside>
+
+  <main class="docs-content">
+    <div class="crumbs"><a href="/docs/">Docs</a> / Migrate from Office 365 Connectors</div>
+    <h1>Migrate from Office 365 Connectors to Microsoft&nbsp;Teams</h1>
+    <p class="lede">
+      Microsoft retired Office 365 / Teams Connectors — the "Incoming Webhook" and per-service connectors
+      that piped build and pipeline events into channels. If your CI/CD notifications went quiet, this is why.
+      Here's how to move to a modern replacement without losing any coverage.
+    </p>
+
+    <div class="callout warn">
+      <div class="bar">The short version</div>
+      <div class="inner"><p>Connectors are being wound down across Microsoft 365. New connector creation is
+      blocked and existing ones stop delivering. The supported path forward is a proper Teams app —
+      which is exactly what Per My Last Webhook is. Migration takes a few minutes per pipeline.</p></div>
+    </div>
+
+    <h2 id="what-happened">What happened to Office 365 Connectors?</h2>
+    <p>Connectors (including the generic <em>Incoming Webhook</em> and service-specific ones like the GitHub or
+    Azure DevOps connectors) were the long-standing way to post cards into a Teams channel from an external
+    system. Microsoft has deprecated them platform-wide: new connectors can't be created and existing ones
+    are being switched off. Teams pushed <strong>Workflows</strong> (Power Automate) as the replacement plumbing —
+    but for CI/CD notifications that's a step down (more on that below).</p>
+
+    <h2 id="why-not-webhook">Why the raw Workflows webhook falls short for CI/CD</h2>
+    <p>You <em>can</em> rebuild a bare incoming webhook with a Workflow. But you're back to where connectors
+    started, minus the niceties:</p>
+    <ul>
+      <li><strong>Every platform looks different.</strong> A GitHub payload, a Jenkins payload, and a GitLab
+      payload are wildly different shapes — the raw webhook dumps whatever it's sent. No normalization.</li>
+      <li><strong>No routing, no noise control.</strong> One URL, one channel, every event. No "prod failures
+      here, everything else there," no collapsing a flapping pipeline, no quiet hours.</li>
+      <li><strong>You hand-build every card.</strong> Adaptive Card JSON, by hand, per source, maintained forever.</li>
+      <li><strong>No ownership routing or approvals.</strong> No @mentions on failure, no on-call DMs, no
+      approve/reject gates.</li>
+    </ul>
+
+    <h2 id="mapping">Old connector → new subscription</h2>
+    <p>The mental model maps almost one-to-one. Where you had a connector, you'll have a
+    <strong>subscription</strong>:</p>
+    <div style="overflow-x:auto">
+    <table class="plan-table" style="width:100%;border-collapse:collapse">
+      <thead><tr><th style="text-align:left">Office 365 Connector</th><th style="text-align:left">Per My Last Webhook</th></tr></thead>
+      <tbody>
+        <tr><td>An incoming-webhook URL per channel</td><td>A subscription with an ingest URL, per pipeline</td></tr>
+        <tr><td>Raw payload → you format the card</td><td>Normalized event → rich card, automatically</td></tr>
+        <tr><td>One channel per connector</td><td>Channel, DM, or webhook — plus routing to many</td></tr>
+        <tr><td>Manage in each channel's connector settings</td><td>Manage all subscriptions in one admin tab</td></tr>
+        <tr><td>No auth beyond the URL</td><td>Per-subscription key (rotatable) + optional HMAC</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="steps">Migration steps</h2>
+    <div class="step"><div class="num">1</div><div class="body"><p><strong>Install the app.</strong> Add
+    <em>Per My Last Webhook</em> from the Teams store (a Teams admin approves it once for your org). See
+    <a href="getting-started.html#install">install steps</a>.</p></div></div>
+    <div class="step"><div class="num">2</div><div class="body"><p><strong>Recreate each connector as a
+    subscription.</strong> For every old connector, create a subscription: name it, pick the platform, choose the
+    destination (the same channel it used to post to). You'll get a new ingest URL.</p></div></div>
+    <div class="step"><div class="num">3</div><div class="body"><p><strong>Point your source at the new URL.</strong>
+    In the platform's webhook settings, replace the old connector URL with your new ingest URL. Platform-specific
+    steps: <a href="platforms.html">platform reference</a>.</p></div></div>
+    <div class="step"><div class="num">4</div><div class="body"><p><strong>Verify.</strong> Click <strong>Test</strong>
+    on the subscription (or run a real build) and confirm the card lands in the right channel.</p></div></div>
+    <div class="step"><div class="num">5</div><div class="body"><p><strong>Remove the old connector.</strong> Once
+    the new card is flowing, delete the retired connector so nothing's half-wired.</p></div></div>
+
+    <div class="callout tip"><div class="bar">Upgrade while you're in there</div><div class="inner"><p>Since you're
+    touching each pipeline anyway, this is the moment to add the things connectors never had: route prod failures to
+    <code>#prod-alerts</code>, collapse noisy pipelines with incident mode, or DM the on-call owner on failure. See
+    <a href="features.html">features</a>.</p></div></div>
+
+    <h2 id="faq">Migration FAQ</h2>
+    <h3>Do I have to migrate all at once?</h3>
+    <p>No. Migrate one pipeline at a time — the old connector and the new subscription can run side by side until
+    you're happy, then remove the connector.</p>
+    <h3>Will my cards look the same?</h3>
+    <p>Better, and consistent. Instead of whatever each source sent, every build renders in the same clean
+    Adaptive Card format with status, branch, commit, author, and duration.</p>
+    <h3>Is there a free option?</h3>
+    <p>Yes — Free covers all platforms, rich cards, channel/webhook delivery, and up to three subscriptions.
+    See <a href="pricing.html">pricing</a>.</p>
+    <h3>What if my tool isn't a named platform?</h3>
+    <p>Use the <a href="platforms.html#generic">generic</a> platform with a field mapping — anything that POSTs
+    JSON works.</p>
+
+    <div class="cta-row" style="margin-top:1.5rem">
+      <a class="btn btn-primary" href="/#install">Install for Teams — free</a>
+      <a class="btn btn-ghost" href="getting-started.html">Read the getting-started guide</a>
+    </div>
+  </main>
+</div>
+</div>
+
+<div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\MIGRATE</span><span class="clock">Status: 200 OK</span></div>
+</body>
+</html>

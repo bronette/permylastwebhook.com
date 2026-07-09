@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MessageCard Validator & Migration Assistant — Per My Last Webhook</title>
+<meta name="description" content="Paste a legacy Office 365 MessageCard and see the Adaptive Card it becomes in Teams, plus compatibility warnings. The free migration tool from Per My Last Webhook." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+<meta property="og:title" content="MessageCard Validator & Migration Assistant" />
+<meta property="og:image" content="../og-image.png" />
+<link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../">
+    <img src="../logo-mark.svg" alt="" width="32" height="32" />
+    <span>Per My Last Webhook</span>
+  </a>
+  <nav class="site-nav">
+    <a href="../#features">Features</a>
+    <a href="../#how">How it works</a>
+    <a href="../#install">Install</a>
+    <a href="../#about">About</a>
+    <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <section class="validator">
+    <span class="eyebrow">// migration assistant · card validator</span>
+    <h1>MessageCard → Adaptive Card</h1>
+    <p class="lede">
+      Office 365 Connectors are being retired. Paste the legacy
+      <strong>MessageCard</strong> JSON your old connector posts, and see exactly
+      what it becomes in Teams — plus every compatibility gotcha before you migrate.
+      No login, nothing stored.
+    </p>
+
+    <div class="val-grid">
+      <div class="val-input">
+        <label for="payload"><strong>Legacy MessageCard JSON</strong></label>
+        <textarea id="payload" spellcheck="false" aria-label="MessageCard JSON input"></textarea>
+        <div class="cta-row">
+          <button class="btn btn-primary" id="run">Convert &amp; validate</button>
+          <button class="btn btn-ghost" id="sample">Load sample</button>
+        </div>
+        <p class="muted small" id="backend-note" hidden></p>
+      </div>
+
+      <div class="val-output" id="output" hidden>
+        <div class="val-block">
+          <strong>Mobile / toast summary</strong>
+          <p class="val-summary" id="summary"></p>
+        </div>
+        <div class="val-block">
+          <strong>Compatibility findings</strong>
+          <ul class="findings" id="findings"></ul>
+        </div>
+        <div class="val-block">
+          <strong>Adaptive Card (rendered in Teams)</strong>
+          <pre class="val-card"><code id="card"></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <p class="muted small val-foot">
+      Ready to migrate for real?
+      <a id="migrate-admin" href="{{API_BASE_URL}}/api/ui/validator">Create a subscription in the admin app →</a>
+      or see <a href="../#install">install steps</a>.
+    </p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="foot-cols">
+    <div>
+      <strong>DevOps Connector</strong>
+      <p class="muted small">© {{YEAR}} {{COMPANY_NAME}}.</p>
+    </div>
+    <div>
+      <strong>Product</strong>
+      <a href="../#features">Features</a>
+      <a href="../validator/">Validator</a>
+    </div>
+    <div>
+      <strong>Legal</strong>
+      <a href="../privacy/">Privacy</a>
+      <a href="../terms/">Terms</a>
+    </div>
+    <div>
+      <strong>Code</strong>
+      <a href="{{GITHUB_URL}}">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<div class="taskbar">
+  <span class="start">▣ Start</span>
+  <span class="seg">VALIDATOR.EXE</span>
+  <span class="clock" id="clock">Ready</span>
+</div>
+
+<script>
+(function () {
+  var RAW_API = "{{API_BASE_URL}}";
+  // If the backend URL is still a placeholder, fall back to same-origin (works
+  // when this page is served by the Function App itself) and warn the user.
+  var configured = RAW_API && RAW_API.indexOf("REPLACE-ME") === -1;
+  var ENDPOINT = (configured ? RAW_API.replace(/\/+$/, "") : "") + "/api/preview";
+
+  var SAMPLE = {
+    "@type": "MessageCard",
+    "@context": "http://schema.org/extensions",
+    themeColor: "2DC72D",
+    summary: "Build #128 succeeded",
+    title: "Deploy to prod succeeded",
+    text: "All checks green.",
+    sections: [{
+      activityTitle: "octocat",
+      activitySubtitle: "pushed to main",
+      facts: [
+        { name: "Repository", value: "acme/web" },
+        { name: "Branch", value: "main" },
+        { name: "Duration", value: "2m 14s" }
+      ]
+    }],
+    potentialAction: [
+      { "@type": "OpenUri", name: "View run", targets: [{ os: "default", uri: "https://ci.example.com/run/128" }] },
+      { "@type": "HttpPOST", name: "Approve", target: "https://ci.example.com/approve" }
+    ]
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var payload = $("payload"), output = $("output"), clock = $("clock");
+  var note = $("backend-note");
+
+  if (!configured) {
+    note.hidden = false;
+    note.textContent = "Note: the validator backend isn't configured yet. Set API_BASE_URL in site/config.json to your deployed Function App URL.";
+  }
+
+  $("sample").addEventListener("click", function () {
+    payload.value = JSON.stringify(SAMPLE, null, 2);
+  });
+
+  function esc(s) {
+    return String(s).replace(/[&<>]/g, function (c) {
+      return c === "&" ? "&amp;" : c === "<" ? "&lt;" : "&gt;";
+    });
+  }
+
+  function render(data) {
+    output.hidden = false;
+    $("summary").textContent = data.summary || "(none)";
+    $("card").textContent = data.card ? JSON.stringify(data.card, null, 2) : "(could not render — see findings)";
+
+    var ul = $("findings");
+    ul.innerHTML = "";
+    var findings = data.findings || [];
+    if (!findings.length) {
+      var ok = document.createElement("li");
+      ok.className = "finding finding-ok";
+      ok.textContent = "✓ No compatibility issues — this card migrates cleanly.";
+      ul.appendChild(ok);
+    } else {
+      findings.forEach(function (f) {
+        var li = document.createElement("li");
+        li.className = "finding finding-" + (f.level || "info");
+        li.innerHTML = "<span class='finding-tag'>" + esc((f.level || "info").toUpperCase()) +
+          "</span> " + esc(f.message);
+        ul.appendChild(li);
+      });
+    }
+  }
+
+  $("run").addEventListener("click", function () {
+    var text = payload.value.trim();
+    if (!text) { clock.textContent = "Paste a payload first"; return; }
+
+    // Validate JSON locally for a fast, offline error before hitting the network.
+    try { JSON.parse(text); }
+    catch (e) { clock.textContent = "Invalid JSON: " + e.message; return; }
+
+    if (!configured) {
+      clock.textContent = "Backend not configured — see note above";
+      return;
+    }
+
+    clock.textContent = "Validating…";
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: text
+    }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (!res.ok) { clock.textContent = "Error: " + (res.j.error || "request failed"); return; }
+        render(res.j);
+        clock.textContent = res.j.valid ? "Valid · " + (res.j.findings || []).length + " note(s)"
+                                         : "Not a valid MessageCard";
+      })
+      .catch(function (e) { clock.textContent = "Network error: " + e.message; });
+  });
+})();
+</script>
+</body>
+</html>
