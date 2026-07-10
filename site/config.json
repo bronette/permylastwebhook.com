@@ -5,7 +5,7 @@
   "DPO_EMAIL": "privacy@permylastwebhook.com",
   "SECURITY_CONTACT_EMAIL": "security@permylastwebhook.com",
   "EFFECTIVE_DATE": "2026-06-20",
-  "AZURE_REGION": "East US (eastus)",
+  "AZURE_REGION": "Central US (centralus)",
   "JURISDICTION": "the State of Idaho, USA",
   "VENUE": "Kootenai County, Idaho",
   "RATE_LIMIT_PER_MINUTE": "60",
