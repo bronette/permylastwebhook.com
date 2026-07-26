@@ -220,7 +220,7 @@ function head(title, desc, canonical, depth) {
   <a class="brand" href="/"><img src="${up}logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a>
   <nav class="site-nav">
     <a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/integrations/">Integrations</a>
-    <a href="/#install">Install</a><a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+    <a href="/#install">Install</a><a class="nav-cta" href="{{GITHUB_APP_URL}}">GitHub</a>
   </nav>
 </header>`;
 }
@@ -278,7 +278,7 @@ function platformPage(p) {
       <a class="btn btn-primary" href="/#install">Install for Teams — free</a>
       <a class="btn btn-ghost" href="/integrations/">All integrations</a>
     </div>
-    <p class="muted small">Also works with GitHub Actions, GitLab, Jenkins, Azure DevOps, Bitbucket, CircleCI, Buildkite, and any JSON webhook.</p>
+    <p class="muted small">Part of Per My Last Webhook — <a href="/integrations/">all ${PLATFORMS.length} integrations</a> into one Teams app.</p>
   </main>
 </div>
 ${foot(`C:\\INTEGRATIONS\\${p.short.toUpperCase()}`)}`;
@@ -291,7 +291,7 @@ function hubPage() {
   <main class="docs-content" style="max-width:900px;margin:0 auto">
     <div class="crumbs">Integrations</div>
     <h1>Integrations</h1>
-    <p class="lede">One Teams app, eight ways in. Pick your CI/CD platform for setup steps, or wire up anything that POSTs JSON with the generic webhook.</p>
+    <p class="lede">Sixteen CI/CD and observability platforms, plus any JSON webhook — one Teams app. Pick your source for setup steps.</p>
     <style>.next-grid a.card{display:block;color:inherit}.next-grid a.card:hover{text-decoration:none;border-color:var(--purple)}.next-grid a.card h3{color:var(--purple-d)}</style>
     <div class="next-grid">
       ${cards}

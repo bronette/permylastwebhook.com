@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1366 768" preserveAspectRatio="xMidYMid meet">
   <rect width="1366" height="768" fill="#f6f8fa" />
   <rect x="0" y="0" width="1366" height="56" fill="#1F6FEB" />
-  <text x="32" y="36" font-family="system-ui, sans-serif" font-size="18" fill="white" font-weight="600">DevOps Connector</text>
+  <text x="32" y="36" font-family="system-ui, sans-serif" font-size="18" fill="white" font-weight="600">Per My Last Webhook</text>
   <text x="1280" y="36" font-family="system-ui, sans-serif" font-size="14" fill="white" opacity="0.85" text-anchor="end">admin@example.com</text>
   <rect x="32"   y="120" width="200" height="540" fill="white" stroke="#d8dee4" />
   <rect x="48"   y="144" width="168" height="32"  fill="#e6edf3" />

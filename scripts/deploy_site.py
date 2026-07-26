@@ -30,11 +30,42 @@ def load_env() -> dict:
     return env
 
 
+def scan_placeholders(root: Path) -> list[tuple[str, int]]:
+    """Return (file, line_no) for lines containing REPLACE-ME in text files."""
+    hits: list[tuple[str, int]] = []
+    for p in sorted(root.rglob("*")):
+        if not p.is_file():
+            continue
+        if p.suffix.lower() not in {".html", ".css", ".js", ".json", ".txt", ".xml"}:
+            continue
+        try:
+            text = p.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        for i, line in enumerate(text.splitlines(), 1):
+            if "REPLACE-ME" in line:
+                hits.append((p.relative_to(root).as_posix(), i))
+    return hits
+
+
 def main() -> int:
     dry = "--dry-run" in sys.argv
     if not LOCAL.is_dir():
         print("site-dist/ missing — run `npm run site:build` first.")
         return 1
+
+    placeholder_hits = scan_placeholders(LOCAL)
+    if placeholder_hits and not dry:
+        print("Refusing to deploy: unresolved REPLACE-ME placeholders in site-dist/:")
+        for rel, line in placeholder_hits[:20]:
+            print(f"  {rel}:{line}")
+        if len(placeholder_hits) > 20:
+            print(f"  … and {len(placeholder_hits) - 20} more")
+        print("\nFill INSTALL_URL and API_BASE_URL in site/config.json, then npm run site:build.")
+        return 1
+    if placeholder_hits and dry:
+        print(f"Warning: {len(placeholder_hits)} REPLACE-ME placeholder line(s) in site-dist/ (deploy would fail).")
+
     env = load_env()
     host = env["CPANEL_HOST"]
     port = int(env.get("CPANEL_SFTP_PORT", "21098"))

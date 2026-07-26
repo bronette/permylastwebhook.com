@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Store test instructions — Per My Last Webhook docs</title>
+<meta name="description" content="Validation steps for Microsoft Partner Center and AppSource reviewers: install Per My Last Webhook, create a subscription, fire a test card, and verify delivery." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a>
+  <nav class="site-nav">
+    <a href="/#features" class="nav-secondary">Features</a><a href="/docs/">Docs</a><a href="/#install">Install</a>
+    <a href="/validator/" class="nav-secondary">Validator</a><a class="nav-cta" href="{{GITHUB_APP_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<div class="docs-shell">
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="side-title">Start here</div>
+    <ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+    <div class="side-title">Guides</div>
+    <ul>
+      <li><a href="migrate-from-office-365-connectors.html">Migrate from O365 Connectors</a></li>
+      <li><a href="platforms.html">Platform reference</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing &amp; plans</a></li>
+      <li><a href="admin-consent.html">Admin consent</a></li>
+    </ul>
+    <div class="side-title">Help</div>
+    <ul>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="getting-started.html#trouble">Troubleshooting</a></li>
+      <li><a href="test-instructions.html" class="active">Store test instructions</a></li>
+    </ul>
+  </aside>
+
+  <main class="docs-content">
+    <div class="crumbs"><a href="/docs/">Docs</a> / Store test instructions</div>
+    <h1>AppSource / Partner Center test instructions</h1>
+    <p class="lede">
+      Use this checklist to validate <strong>Per My Last Webhook</strong> end-to-end in a Microsoft 365
+      test tenant. Expected time: about 10 minutes after admin consent.
+    </p>
+
+    <h2>Prerequisites</h2>
+    <ul>
+      <li>A Microsoft 365 tenant with Teams enabled.</li>
+      <li>A Global Administrator or Cloud Application Administrator account to grant admin consent.</li>
+      <li>A Teams channel where you can add apps (or a Teams Workflows incoming-webhook URL).</li>
+    </ul>
+
+    <h2>1 · Install and consent</h2>
+    <ol>
+      <li>Open Microsoft Teams → <strong>Apps</strong> → search <em>Per My Last Webhook</em> → <strong>Add</strong>
+      (or use the <a href="/#install">install link</a> from our website).</li>
+      <li>Complete <strong>admin consent</strong> when prompted. See <a href="admin-consent.html">admin consent</a> if needed.</li>
+      <li>Open the app. Confirm the <strong>Subscriptions</strong> tab loads and you can sign in with SSO.</li>
+    </ol>
+    <p><strong>Expected:</strong> No "not installed" or AADSTS consent errors. The Diagnostics tab reports all checks green.</p>
+
+    <h2>2 · Create a subscription</h2>
+    <ol>
+      <li>Go to <strong>Subscriptions</strong> → <strong>New subscription</strong>.</li>
+      <li>Name: <code>AppSource validation</code>. Platform: <strong>Generic</strong> (or any platform).</li>
+      <li>Destination: pick a Teams channel (add the bot to the channel first) <em>or</em> paste a Teams Workflows webhook URL.</li>
+      <li>Save and copy the <strong>ingest URL</strong> (includes a secret key).</li>
+    </ol>
+    <p><strong>Expected:</strong> Ingest URL is shown once; subscription appears in the list.</p>
+
+    <h2>3 · Fire a test card</h2>
+    <ol>
+      <li>On the subscription, click <strong>Test</strong>.</li>
+      <li>Confirm an Adaptive Card appears in the chosen destination within a few seconds.</li>
+    </ol>
+    <p><strong>Expected:</strong> Card shows synthetic build metadata (status, branch, duration). No duplicate cards on retry.</p>
+
+    <h2>4 · Optional: webhook ingest</h2>
+    <ol>
+      <li>POST a sample JSON body to the ingest URL from step 2 (platform <code>generic</code> with a configured field mapping, or a named platform payload — see <a href="platforms.html">platform reference</a>).</li>
+      <li>Confirm a second card is delivered and normalized correctly.</li>
+    </ol>
+
+    <h2>5 · Audit and uninstall</h2>
+    <ol>
+      <li>Open the <strong>Audit log</strong> tab — subscription creation should be recorded with your UPN.</li>
+      <li>Delete the test subscription.</li>
+      <li>To fully remove the app: Entra admin center → Enterprise applications → remove <em>Per My Last Webhook</em>.</li>
+    </ol>
+    <p><strong>Expected:</strong> Uninstall stops new sign-ins; tenant data is purged per the <a href="/privacy/">Privacy Policy</a>.</p>
+
+    <h2>Support during review</h2>
+    <p>If validation fails, email <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a> with your tenant id,
+    the failing step, and a screenshot of the Diagnostics tab. Security: <a href="mailto:{{SECURITY_CONTACT_EMAIL}}">{{SECURITY_CONTACT_EMAIL}}</a>.</p>
+
+    <div class="callout note"><div class="bar">Related links</div><div class="inner"><p>
+    <a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Service</a> ·
+    <a href="getting-started.html">Getting started</a> · <a href="{{GITHUB_APP_URL}}">Source code</a>
+    </p></div></div>
+  </main>
+</div>
+</div>
+
+<div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\TEST-INSTRUCTIONS</span><span class="clock">Status: 200 OK</span></div>
+</body>
+</html>

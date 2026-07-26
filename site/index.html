@@ -6,10 +6,13 @@
 <meta name="google-site-verification" content="kV3LLzamTSh3wEvurPrEdAjqVmTqTsc8yQkNITRA8Ss" />
 <title>Per My Last Webhook — Enterprise Integrations, 90s Vibes.</title>
 <meta name="description" content="Rich Teams notifications from 16 tools — Jenkins, GitHub Actions, GitLab, Azure Pipelines, Buildkite, CircleCI, Bitbucket, Argo CD, TeamCity, Datadog, Grafana, Drone, Sentry, PagerDuty, Alertmanager, and Octopus Deploy. The successor to deprecated Office 365 Connectors." />
+<link rel="canonical" href="{{SITE_ORIGIN}}/" />
 <link rel="icon" href="favicon.png" type="image/png" sizes="32x32" />
 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-<meta property="og:title" content="Per My Last Webhook — DevOps Connector for Teams" />
-<meta property="og:image" content="og-image.png" />
+<meta property="og:title" content="Per My Last Webhook — CI/CD notifications for Microsoft Teams" />
+<meta property="og:description" content="Rich Teams notifications from 16 CI/CD, GitOps, and observability tools. The successor to deprecated Office 365 Connectors." />
+<meta property="og:url" content="{{SITE_ORIGIN}}/" />
+<meta property="og:image" content="{{SITE_ORIGIN}}/og-image.png" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -19,13 +22,13 @@
     <span>Per My Last Webhook</span>
   </a>
   <nav class="site-nav">
-    <a href="#features">Features</a>
-    <a href="integrations/">Integrations</a>
+    <a href="#features" class="nav-secondary">Features</a>
+    <a href="integrations/" class="nav-secondary">Integrations</a>
     <a href="docs/">Docs</a>
     <a href="#install">Install</a>
-    <a href="validator/">Validator</a>
-    <a href="#faq">FAQ</a>
-    <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+    <a href="validator/" class="nav-secondary">Validator</a>
+    <a href="#faq" class="nav-secondary">FAQ</a>
+    <a class="nav-cta" href="{{GITHUB_APP_URL}}">GitHub</a>
   </nav>
 </header>
 
@@ -41,7 +44,7 @@
       </p>
       <div class="cta-row">
         <a class="btn btn-primary" href="{{INSTALL_URL}}">Install for Teams</a>
-        <a class="btn btn-ghost" href="{{GITHUB_URL}}">View on GitHub</a>
+        <a class="btn btn-ghost" href="{{GITHUB_APP_URL}}">View on GitHub</a>
       </div>
       <p class="trust">
         Multi-tenant Entra OAuth · audit log · per-org rate limits ·
@@ -191,12 +194,12 @@
       The simplest path is the
       <a href="{{INSTALL_URL}}">Teams Store listing</a>. If you'd rather
       self-host, the source is on
-      <a href="{{GITHUB_URL}}">GitHub</a> with Bicep templates that stand up
+      <a href="{{GITHUB_APP_URL}}">GitHub</a> with Bicep templates that stand up
       the full Azure footprint (Functions, Cosmos, Key Vault, Application
       Insights) and a smoke-gated CI release path.
     </p>
-    <pre><code>git clone {{GITHUB_URL}}
-cd teams-devops-connector
+    <pre><code>git clone {{GITHUB_APP_URL}}
+cd permylastwebhook
 ./infra/deploy.ps1 -ResourceGroup my-rg -Location eastus \
                    -BaseName mytdc -Environment dev</code></pre>
     <p class="muted">
@@ -255,9 +258,9 @@ cd teams-devops-connector
     <details open>
       <summary>Why is this needed? Doesn't Teams have connectors built in?</summary>
       <p>
-        Microsoft <a href="https://devblogs.microsoft.com/microsoft365dev/retirement-of-office-365-connectors-within-microsoft-teams/">deprecated</a>
+        Microsoft <a href="https://devblogs.microsoft.com/microsoft365dev/retirement-of-office-365-connectors-within-microsoft-teams/">retired</a>
         the Office 365 Connectors for Microsoft Teams. Existing connectors
-        stop working in 2025; new ones cannot be created. This service is
+        have been switched off; new ones can no longer be created. This service is
         the replacement.
       </p>
     </details>
@@ -296,7 +299,7 @@ cd teams-devops-connector
       <p>
         Private-network ingestion, more delivery channels (Slack, Discord),
         and richer per-subscription branding. See the
-        <a href="{{GITHUB_URL}}">GitHub repository</a> for the current
+        <a href="{{GITHUB_APP_URL}}">GitHub repository</a> for the current
         backlog.
       </p>
     </details>
@@ -306,7 +309,7 @@ cd teams-devops-connector
 <footer class="site-footer">
   <div class="foot-cols">
     <div>
-      <strong>DevOps Connector</strong>
+      <strong>Per My Last Webhook</strong>
       <p class="muted small">
         © {{YEAR}} {{COMPANY_NAME}}. Microsoft Teams and Microsoft 365 are
         trademarks of Microsoft Corporation. This service is not endorsed
@@ -317,7 +320,7 @@ cd teams-devops-connector
       <strong>Product</strong>
       <a href="#features">Features</a>
       <a href="#install">Install</a>
-      <a href="{{STATUS_PAGE_URL}}">Status</a>
+      <a href="docs/">Docs</a>
     </div>
     <div>
       <strong>Legal</strong>
@@ -327,9 +330,9 @@ cd teams-devops-connector
     </div>
     <div>
       <strong>Code</strong>
-      <a href="{{GITHUB_URL}}">GitHub</a>
-      <a href="{{GITHUB_URL}}/blob/main/CHANGELOG.md">Changelog</a>
-      <a href="{{GITHUB_URL}}/issues">Issues</a>
+      <a href="{{GITHUB_APP_URL}}">GitHub</a>
+      <a href="{{GITHUB_APP_URL}}/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="{{GITHUB_APP_URL}}/issues">Issues</a>
     </div>
   </div>
 </footer>

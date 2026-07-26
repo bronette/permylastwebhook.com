@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Admin consent — Per My Last Webhook docs</title>
+<meta name="description" content="What Per My Last Webhook requests from Microsoft Entra ID, why admin consent is required, and how IT admins approve or revoke the app for a tenant." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a>
+  <nav class="site-nav">
+    <a href="/#features" class="nav-secondary">Features</a><a href="/docs/">Docs</a><a href="/#install">Install</a>
+    <a href="/validator/" class="nav-secondary">Validator</a><a class="nav-cta" href="{{GITHUB_APP_URL}}">GitHub</a>
+  </nav>
+</header>
+
+<div class="docs-shell">
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="side-title">Start here</div>
+    <ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+    <div class="side-title">Guides</div>
+    <ul>
+      <li><a href="migrate-from-office-365-connectors.html">Migrate from O365 Connectors</a></li>
+      <li><a href="platforms.html">Platform reference</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing &amp; plans</a></li>
+      <li><a href="admin-consent.html" class="active">Admin consent</a></li>
+    </ul>
+    <div class="side-title">Help</div>
+    <ul>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="getting-started.html#trouble">Troubleshooting</a></li>
+      <li><a href="test-instructions.html">Store test instructions</a></li>
+    </ul>
+  </aside>
+
+  <main class="docs-content">
+    <div class="crumbs"><a href="/docs/">Docs</a> / Admin consent</div>
+    <h1>Admin consent for IT admins</h1>
+    <p class="lede">
+      This page is for the Microsoft 365 administrator who approves <strong>Per My Last Webhook</strong>
+      for your organization. It explains what the app does, what permissions it needs, and how to
+      approve, audit, or remove it.
+    </p>
+
+    <div class="callout note">
+      <div class="bar">One-time per tenant</div>
+      <div class="inner"><p>After an authorized admin grants consent, anyone in your org can open the app and
+      manage subscriptions. You do not need to re-approve for each user.</p></div>
+    </div>
+
+    <h2>What the app does</h2>
+    <p>Per My Last Webhook is a Teams app that receives webhooks from CI/CD and observability tools,
+    normalizes them, and posts Adaptive Cards to Teams channels, DMs, or incoming-webhook URLs.
+    It replaces the retired Office 365 Connectors for pipeline notifications.</p>
+    <p>The app includes a tabbed admin UI (subscriptions, approvals, audit log) and an optional Bot
+    Framework integration for in-place card updates and direct messages.</p>
+
+    <h2>Why admin consent is required</h2>
+    <p>The app is multi-tenant: one shared Azure deployment serves many customer organizations.
+    Microsoft Entra ID requires a tenant admin to grant consent before the app can:</p>
+    <ul>
+      <li>Sign users in with their existing Microsoft 365 identity (SSO via MSAL).</li>
+      <li>Read basic profile information to attribute audit-log entries.</li>
+      <li>Post messages to Teams on behalf of the installed bot (if you use channel or DM delivery).</li>
+    </ul>
+    <p>Without consent, users see a sign-in or "not installed for this tenant" error. The in-app
+    <strong>Diagnostics</strong> tab identifies which gate failed.</p>
+
+    <h2>What we store</h2>
+    <p>We store subscription configuration, encrypted delivery secrets, bot conversation references
+    (if enabled), and a 90-day audit log. We do <strong>not</strong> persist CI webhook payloads after
+    delivery. Full details: <a href="/privacy/">Privacy Policy</a>.</p>
+
+    <h2>How to approve the app</h2>
+    <ol>
+      <li>A user in your tenant opens Teams → <strong>Apps</strong> → searches <em>Per My Last Webhook</em> → <strong>Add</strong>.</li>
+      <li>Teams prompts for admin approval. An admin opens the link or goes to
+      <strong>Microsoft Entra admin center → Enterprise applications</strong> and completes consent.</li>
+      <li>Alternatively, use the admin consent URL from the app's install flow (shown when a non-admin tries to add it).</li>
+      <li>After consent, the installing user (and other authorized admins) can open the app tabs and create subscriptions.</li>
+    </ol>
+
+    <h2>Who can manage subscriptions</h2>
+    <p>Management actions require both a valid Entra sign-in <em>and</em> the app's admin role assigned to
+    the user. This is intentional — subscription changes affect where notifications are delivered and
+    which webhook URLs are registered.</p>
+
+    <h2>Revoking access</h2>
+    <p>To remove the app from your tenant:</p>
+    <ol>
+      <li>Microsoft Entra admin center → <strong>Enterprise applications</strong> → <em>Per My Last Webhook</em> → delete/remove.</li>
+      <li>Remove the app from any Teams channels where the bot was added.</li>
+      <li>Delete old webhook URLs in your CI/CD platforms so nothing keeps calling us.</li>
+    </ol>
+    <p>Tenant data is deleted within 30 days of uninstall. For immediate deletion, email
+    <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>.</p>
+
+    <h2>Questions</h2>
+    <p>Security issues: <a href="mailto:{{SECURITY_CONTACT_EMAIL}}">{{SECURITY_CONTACT_EMAIL}}</a><br />
+    General / procurement: <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a><br />
+    Data protection: <a href="mailto:{{DPO_EMAIL}}">{{DPO_EMAIL}}</a></p>
+
+    <div class="callout tip"><div class="bar">For end users</div><div class="inner"><p>Once you've approved
+    the app, point your team to the <a href="getting-started.html">getting-started guide</a>.</p></div></div>
+  </main>
+</div>
+</div>
+
+<div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\ADMIN-CONSENT</span><span class="clock">Status: 200 OK</span></div>
+</body>
+</html>

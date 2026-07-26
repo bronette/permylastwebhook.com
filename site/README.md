@@ -1,68 +1,38 @@
 # Public landing site
 
-A self-contained static site for the DevOps Connector. No build step.
+Static marketing + documentation site for **Per My Last Webhook**. Built from templated
+HTML in `site/` and published from `site-dist/`.
 
 ```
 site/
 ├── index.html            # landing page
-├── styles.css            # shared styles (light + dark via prefers-color-scheme)
-├── logo.svg              # header brand mark
-├── favicon.svg
-├── screenshot-admin.svg  # placeholder — replace with a real screenshot
-├── privacy/index.html    # rendered from docs/legal/privacy.md
-└── terms/index.html      # rendered from docs/legal/terms.md
+├── styles.css            # shared styles (90s theme)
+├── docs/                 # documentation pages (+ docs.css)
+├── integrations/         # GENERATED SEO pages (edit scripts/gen-integration-pages.mjs)
+├── validator/            # MessageCard migration tool
+├── privacy/ terms/       # legal pages (templated from config.json)
+├── config.json           # public site values — tracked, no secrets
+└── *.png *.svg           # logo, favicon, og-image
 ```
 
-## Filling in placeholders
+## Build
 
-Both the HTML pages and the markdown sources contain `{{TOKENS}}` you need to
-replace before publishing. Fill in `site/config.json` and run:
+Fill in `site/config.json` (copy from `config.example.json`), then:
 
-```powershell
-node ./scripts/fill-site-placeholders.mjs
+```bash
+npm run site:build
+cd site-dist && npx serve .
 ```
 
-The script walks `site/` and `docs/legal/`, replaces every `{{KEY}}` with the
-matching value from `config.json`, and writes the result to a sibling
-`site-dist/` directory (the source files are not modified). It fails loudly if
-any placeholder is left unmatched, so you can't ship a half-templated page.
+`site:build` regenerates integration pages + sitemap, resolves `{{TOKEN}}` placeholders
+into `site-dist/`, and fails if any token is unmatched.
 
-`site/config.example.json` lists every token the templates use, with example
-values.
+## Deploy
+
+See the root [README.md](../README.md). Deploy refuses to upload if `REPLACE-ME`
+placeholders remain in `site-dist/` (use `--dry-run` to preview anyway).
 
 ## Replacing the admin UI screenshot
 
-`screenshot-admin.svg` is a placeholder. Replace it with a 1366×768 PNG (or
-keep it as SVG):
-
-1. Sign in to the admin UI at `https://<your-host>/api/ui/`.
-2. Create one or two example subscriptions.
-3. Take a clean screenshot at 1366×768.
-4. Save it as `site/screenshot-admin.png` and change the `<img src=...>` in
-   `index.html` accordingly.
-
-## Hosting
-
-Several options, all with no infrastructure beyond the file you push:
-
-- **GitHub Pages** — push to a `gh-pages` branch (or set Pages source to a
-  folder on `main`). Free, HTTPS included, custom domain supported via a
-  `CNAME` file.
-- **Cloudflare Pages** — connect the repo, point at the build output folder.
-  Free tier covers low-traffic landing pages.
-- **Azure Static Web Apps** — if you'd rather keep everything in Azure
-  alongside the Function App. The free tier is enough.
-- **Anywhere with a static-file server** — `npx serve site-dist` works for
-  local preview.
-
-## Local preview
-
-```powershell
-cd site
-npx serve .
-# or open index.html in a browser
-```
-
-The page works directly from disk; no server required. The privacy and terms
-links are relative paths (`privacy/`, `terms/`) so they resolve correctly
-when served from a real HTTP host.
+`screenshot-admin.svg` is a placeholder. Replace with a 1366×768 PNG and update
+the `<img src=...>` in `index.html`.

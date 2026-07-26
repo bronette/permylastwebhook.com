@@ -10,8 +10,11 @@
   "VENUE": "Wilmington, Delaware",
   "RATE_LIMIT_PER_MINUTE": "60",
   "YEAR": "2026",
-  "GITHUB_URL": "https://github.com/your-org/teams-devops-connector",
-  "STATUS_PAGE_URL": "https://status.example.com",
+  "SITE_ORIGIN": "https://example.com",
+  "API_BASE_URL": "https://your-function-app.azurewebsites.net",
+  "API_PUBLIC_ORIGIN": "https://api.example.com",
+  "GITHUB_APP_URL": "https://github.com/your-org/your-teams-app",
+  "GITHUB_SITE_URL": "https://github.com/your-org/your-marketing-site",
   "INSTALL_URL": "https://teams.microsoft.com/l/app/REPLACE-ME-APP-ID",
   "PRIVACY_URL": "https://example.com/privacy/"
 }

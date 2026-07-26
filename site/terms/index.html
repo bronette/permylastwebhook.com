@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Terms of Service — DevOps Connector</title>
-<meta name="description" content="Terms of service for DevOps Connector for Microsoft Teams." />
+<title>Terms of Service — Per My Last Webhook</title>
+<meta name="description" content="Terms of service for Per My Last Webhook for Microsoft Teams." />
 <link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
 <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
 <link rel="stylesheet" href="../styles.css" />
@@ -19,7 +19,7 @@
     <a href="../#features">Features</a>
     <a href="../#install">Install</a>
     <a href="../privacy/">Privacy</a>
-    <a class="nav-cta" href="{{GITHUB_URL}}">GitHub</a>
+    <a class="nav-cta" href="{{GITHUB_APP_URL}}">GitHub</a>
   </nav>
 </header>
 
@@ -33,7 +33,7 @@
 
   <h2>1. Acceptance</h2>
   <p>
-    By installing <strong>DevOps Connector</strong> ("the Service") into a
+    By installing <strong>Per My Last Webhook</strong> ("the Service") into a
     Microsoft 365 tenant, or by using any administrative or webhook endpoint
     of the Service, you ("Customer") agree to these Terms. If you are agreeing
     on behalf of an organization, you represent that you have authority to
@@ -44,12 +44,14 @@
 
   <h2>2. What the Service does</h2>
   <p>
-    The Service receives webhook events from continuous-integration platforms
-    (such as Jenkins, GitHub Actions, GitLab CI, Azure Pipelines, Buildkite,
-    CircleCI, and Bitbucket Pipelines), normalizes them into a common event
-    model, and posts adaptive cards to one or more Microsoft Teams channels
-    using Microsoft Teams Workflows incoming webhooks or the Microsoft Bot
-    Framework.
+    The Service receives webhook events from continuous-integration, GitOps,
+    observability, and incident platforms (including Jenkins, GitHub Actions,
+    GitLab CI, Azure Pipelines, Buildkite, CircleCI, Bitbucket Pipelines,
+    Argo CD, TeamCity, Datadog, Grafana, Drone CI, Sentry, PagerDuty,
+    Prometheus Alertmanager, Octopus Deploy, and generic JSON webhooks),
+    normalizes them into a common event model, and posts adaptive cards to one
+    or more Microsoft Teams channels using Microsoft Teams Workflows incoming
+    webhooks or the Microsoft Bot Framework.
   </p>
   <p>
     The Service includes an administrative web UI, an HTTP management API,
@@ -112,8 +114,8 @@
     non-infringement, or uninterrupted operation.
   </p>
   <p>
-    For status updates and known incidents, see
-    <a href="{{STATUS_PAGE_URL}}">{{STATUS_PAGE_URL}}</a>.
+    For status updates and known incidents, contact
+    <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>.
   </p>
 
   <h2>8. Beta and preview features</h2>
@@ -197,7 +199,7 @@
 <footer class="site-footer">
   <div class="foot-cols">
     <div>
-      <strong>DevOps Connector</strong>
+      <strong>Per My Last Webhook</strong>
       <p class="muted small">© {{YEAR}} {{COMPANY_NAME}}.</p>
     </div>
     <div>
@@ -212,7 +214,7 @@
     </div>
     <div>
       <strong>Code</strong>
-      <a href="{{GITHUB_URL}}">GitHub</a>
+      <a href="{{GITHUB_APP_URL}}">GitHub</a>
     </div>
   </div>
 </footer>
