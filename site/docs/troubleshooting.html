@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Troubleshooting — Per My Last Webhook docs</title><meta name="description" content="Troubleshoot Per My Last Webhook installation, Teams sign-in, missing cards, webhook errors, bot delivery, DMs, approvals, and monitoring." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" /><link rel="stylesheet" href="../styles.css" /><link rel="stylesheet" href="docs.css" /></head><body>
+<header class="site-header"><a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a><nav class="site-nav"><a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/#install">Install</a><a href="/validator/">Validator</a><a class="nav-cta" href="{{GITHUB_APP_URL}}">GitHub</a></nav></header>
+<div class="docs-shell"><div class="docs-layout"><aside class="docs-sidebar">
+<div class="side-title">Start here</div><ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+<div class="side-title">Guides</div><ul><li><a href="platforms.html">Platform reference</a></li><li><a href="monitoring.html">Monitoring &amp; health</a></li></ul>
+<div class="side-title">API</div><ul><li><a href="api-reference.html">REST API reference</a></li></ul>
+<div class="side-title">Help</div><ul><li><a class="active" href="troubleshooting.html">Troubleshooting</a></li><li><a href="faq.html">FAQ</a></li><li><a href="admin-consent.html">Admin consent</a></li></ul></aside>
+<main class="docs-content"><div class="crumbs"><a href="/docs/">Docs</a> / Troubleshooting</div><h1>Troubleshooting</h1>
+<p class="lede">Start with the user-visible signal, then follow the delivery path. You should rarely need raw Azure logs.</p>
+
+<h2>Check these first</h2><div class="table-wrap"><table><thead><tr><th>Surface</th><th>What it answers</th></tr></thead><tbody>
+<tr><td><strong>Subscriptions → Last delivery</strong></td><td>Did the latest real or test delivery succeed? A red result includes the reason.</td></tr>
+<tr><td><strong>Bot: <code>@bot subscriptions</code></strong></td><td>Shows the same delivery health inside Teams.</td></tr>
+<tr><td><strong>Diagnostics → Run checks</strong></td><td>Which SSO stage failed: token, tenant installation, or admin role?</td></tr>
+<tr><td><strong>Audit log</strong></td><td>Who changed or deleted configuration, and when?</td></tr>
+<tr><td><code>GET /api/health</code></td><td>Is the backend process reachable?</td></tr>
+<tr><td><code>GET /api/ready</code></td><td>Are required configuration and Cosmos ready?</td></tr>
+</tbody></table></div>
+
+<h2>Installation or sign-in</h2>
+<h3>The Setup page is blank</h3><ol><li>Open <code>{{API_PUBLIC_ORIGIN}}/api/health</code>.</li><li>If it fails, the backend or network is unavailable; this is not an SSO problem.</li><li>If it succeeds, reload Teams and try the web client to separate desktop cache from service availability.</li></ol>
+<h3>“This app hasn't been set up for your organization”</h3><p>A tenant admin has not completed the one-time consent flow. Follow <a href="admin-consent.html">Admin consent</a>, then sign out and back in.</p>
+<h3>Sign-in loops or access denied</h3><p>Open <strong>Diagnostics</strong> from the admin navigation and run checks. A valid token is not enough: the tenant must be installed and the user must hold <code>Connector.Admin</code>.</p>
+
+<h2>A card never arrived</h2><ol>
+<li><strong>Click Test.</strong> This bypasses filters and tests the actual destination.</li>
+<li><strong>Read Last delivery.</strong> Red means the request reached us and delivery failed; “no events yet” means no accepted event reached that subscription.</li>
+<li><strong>Check the sender.</strong> Open GitHub Recent Deliveries, GitLab webhook history, or the equivalent platform log.</li>
+<li><strong>Check intentional suppression.</strong> Status filters, pipeline allowlists, quiet hours, failure-after-success, dedupe, and incident mode can all suppress a new card.</li>
+</ol>
+<div class="table-wrap"><table><thead><tr><th>Sender response</th><th>Meaning</th><th>Fix</th></tr></thead><tbody>
+<tr><td class="status-code">400</td><td>Wrong platform or invalid payload</td><td>Use the subscription's exact ingest URL and the event type in <a href="platforms.html">Platform reference</a>.</td></tr>
+<tr><td class="status-code">401</td><td>Missing, invalid, or rotated key</td><td>Rotate the key and replace the sender's URL.</td></tr>
+<tr><td class="status-code">404</td><td>Subscription missing</td><td>Recreate it and update the sender.</td></tr>
+<tr><td class="status-code">429</td><td>Tenant rate limit</td><td>Honor <code>Retry-After</code>; reduce or batch the burst.</td></tr>
+<tr><td class="status-code">502</td><td>Teams delivery failed after retries</td><td>Check destination membership/URL and Microsoft service health.</td></tr>
+</tbody></table></div>
+
+<h2>Destination-specific failures</h2>
+<h3>Bot channel: 403 or “not part of conversation”</h3><p>The app was removed or is not installed in that channel. Add it to the channel, reselect the channel, and Test again.</p>
+<h3>Incoming webhook fails</h3><p>The Teams Workflows URL was deleted, expired, or belongs to another workflow. Recreate the workflow and paste the new URL into the subscription. The URL is write-only and will not be displayed later.</p>
+<h3>DM delivery fails</h3><p>The recipient must have opened or messaged the app so the bot has a valid 1:1 conversation reference. Ask them to open the app, then reselect them.</p>
+<h3>Incident card stopped updating</h3><p>If somebody deleted the card, the next event should create a replacement. If it does not, inspect Last delivery for a Bot Framework error and verify the bot remains in the channel.</p>
+
+<h2>API update failures</h2><h3>PUT returns 428</h3><p>GET the subscription and send its exact response <code>ETag</code> as <code>If-Match</code>. Wildcard <code>*</code> is rejected.</p>
+<h3>PUT returns 412</h3><p>Another user changed the subscription. GET the latest state, reconcile your desired configuration, and retry. Do not blindly replay the stale body: PUT clears omitted optional fields.</p>
+<h3>Platform change returns 400</h3><p>Platform is part of the ingest URL and cannot change in place. Create a new subscription and update the sender.</p>
+
+<h2>Monitoring says degraded</h2><ol><li>Call <code>/api/ready</code>. A 503 indicates a service dependency problem.</li><li>Call authenticated <code>/api/monitoring/status</code> and identify failing subscriptions.</li><li>Correlate their timestamps with deployments, sender retries, and Microsoft service health.</li><li>For self-hosted systems, inspect Application Insights requests, dependencies, and exceptions.</li></ol>
+
+<h2>Before contacting support</h2><p>Include the approximate UTC time, platform, subscription name, HTTP status, and a screenshot of Last delivery or Diagnostics. Never send ingest URLs, API keys, webhook URLs, tokens, raw authorization headers, or full payloads containing secrets.</p>
+<div class="callout tip"><div class="bar">Still stuck?</div><div class="inner"><p>Email <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>. Security reports go to <a href="mailto:{{SECURITY_CONTACT_EMAIL}}">{{SECURITY_CONTACT_EMAIL}}</a>.</p></div></div>
+</main></div></div><div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\TROUBLESHOOT</span><span class="clock">Status: diagnosing</span></div></body></html>

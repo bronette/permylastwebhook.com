@@ -255,7 +255,7 @@ function platformPage(p) {
     <h2>Set up in minutes</h2>
     <p>Create a subscription in the app (platform: <strong>${p.short}</strong>), copy its ingest URL, then:</p>
       ${steps}
-    <div class="callout tip"><div class="bar">See it instantly</div><div class="inner"><p>Don't want to wait for a build? Hit <strong>Test</strong> on the subscription — a card lands immediately. Full steps in the <a href="/docs/platforms.html#${p.slug === "github-actions" ? "github" : p.slug === "azure-devops" ? "ado" : p.slug === "generic-webhook" ? "generic" : p.slug}">platform reference</a>.</p></div></div>
+    <div class="callout tip"><div class="bar">See it instantly</div><div class="inner"><p>Don't want to wait for a build? Hit <strong>Test</strong> on the subscription — a card lands immediately. Full steps in the <a href="/docs/platforms.html#${p.slug === "github-actions" ? "github" : p.slug === "azure-devops" ? "ado" : p.slug === "argo-cd" ? "argocd" : p.slug === "octopus-deploy" ? "octopus" : p.slug === "generic-webhook" ? "generic" : p.slug}">platform reference</a>.</p></div></div>
 
     <h2>What lands in Teams</h2>
     <div class="card-window">

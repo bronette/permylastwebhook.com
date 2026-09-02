@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>REST API reference — Per My Last Webhook docs</title>
+<meta name="description" content="Complete Per My Last Webhook REST API reference: authentication, subscriptions, ETags, monitoring, webhooks, approvals, errors, and curl examples." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" />
+<link rel="stylesheet" href="../styles.css" /><link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<header class="site-header"><a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a><nav class="site-nav"><a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/#install">Install</a><a href="/validator/">Validator</a><a class="nav-cta" href="{{GITHUB_APP_URL}}">GitHub</a></nav></header>
+<div class="docs-shell"><div class="docs-layout">
+<aside class="docs-sidebar">
+  <div class="side-title">Start here</div><ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+  <div class="side-title">Guides</div><ul><li><a href="migrate-from-office-365-connectors.html">Migrate from O365</a></li><li><a href="platforms.html">Platform reference</a></li><li><a href="features.html">Features</a></li><li><a href="monitoring.html">Monitoring &amp; health</a></li></ul>
+  <div class="side-title">API</div><ul><li><a class="active" href="api-reference.html">REST API reference</a></li><li><a href="{{API_PUBLIC_ORIGIN}}/api/openapi.json">OpenAPI 3.1 JSON</a></li></ul>
+  <div class="side-title">Help</div><ul><li><a href="troubleshooting.html">Troubleshooting</a></li><li><a href="faq.html">FAQ</a></li><li><a href="admin-consent.html">Admin consent</a></li></ul>
+</aside>
+<main class="docs-content">
+  <div class="crumbs"><a href="/docs/">Docs</a> / API reference</div>
+  <h1>REST API reference</h1>
+  <p class="lede">Create and reconcile subscriptions, test delivery, query tenant health, and integrate webhook senders. The machine-readable contract is available as <a href="{{API_PUBLIC_ORIGIN}}/api/openapi.json"><code>OpenAPI 3.1 JSON</code></a>.</p>
+
+  <div class="callout note"><div class="bar">Managed service or self-hosted?</div><div class="inner"><p>The hosted service uses Microsoft Entra bearer tokens for management calls. Function keys plus <code>x-org-id</code> are for self-hosted deployments where Entra is not configured. These modes are mutually exclusive.</p></div></div>
+  <div class="on-this-page"><strong>On this page</strong><a href="#base-url">Base URL</a><a href="#authentication">Authentication</a><a href="#subscriptions">Subscriptions</a><a href="#monitoring">Monitoring</a><a href="#webhooks">Webhooks</a><a href="#errors">Errors</a></div>
+
+  <h2 id="base-url">Base URL and formats</h2>
+  <pre><code>{{API_PUBLIC_ORIGIN}}/api</code></pre>
+  <ul><li>Request and response bodies are JSON unless noted.</li><li>Send <code>Content-Type: application/json</code> for request bodies.</li><li>Timestamps are UTC ISO 8601 strings.</li><li>Webhook and API-key fields are write-only and never echoed back.</li></ul>
+
+  <h2 id="authentication">Authentication</h2>
+  <div class="table-wrap"><table><thead><tr><th>Credential</th><th>Send as</th><th>Used for</th></tr></thead><tbody>
+    <tr><td>Entra access token</td><td><code>Authorization: Bearer …</code></td><td>Hosted management API. Tenant must be installed and caller must hold <code>Connector.Admin</code>.</td></tr>
+    <tr><td>Function host key</td><td><code>x-functions-key: …</code></td><td>Self-hosted management API when Entra is disabled.</td></tr>
+    <tr><td>Organization ID</td><td><code>x-org-id: acme</code></td><td>Required with a function key; ignored as identity in Entra mode.</td></tr>
+    <tr><td>Subscription key</td><td><code>?key=…</code> or <code>x-api-key: …</code></td><td>Direct ingest and broadcast webhook authentication.</td></tr>
+  </tbody></table></div>
+  <p>A malformed bearer token never falls back to a function key. Never put management or ingest credentials in logs, browser analytics, Prometheus target URLs, or support screenshots.</p>
+
+  <h2 id="subscriptions">Subscriptions</h2>
+  <p>A subscription binds one platform to exactly one default destination: Teams Workflows webhook, bot channel, or bot DM. It may also include filters, routing, branding, and noise controls.</p>
+
+  <details class="endpoint" open><summary><span class="method post">POST</span><code>/subscriptions</code> · create</summary><div class="endpoint-body">
+    <p>Creates a subscription. The response returns the plaintext <code>apiKey</code> and complete <code>ingestUrl</code> once. Store the ingest URL in the sending platform immediately.</p>
+<pre><code>curl -X POST {{API_PUBLIC_ORIGIN}}/api/subscriptions \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Production builds",
+    "platform": "github",
+    "botChannel": {
+      "conversationId": "19:…@thread.tacv2",
+      "serviceUrl": "https://smba.trafficmanager.net/amer/"
+    },
+    "statusFilter": ["failure", "deployment_failure"],
+    "enabled": true
+  }'</code></pre>
+    <p><strong>Responses:</strong> <span class="status-code">201</span> created, <span class="status-code">400</span> invalid input, <span class="status-code">402</span> plan limit.</p>
+  </div></details>
+
+  <details class="endpoint"><summary><span class="method">GET</span><code>/subscriptions</code> · list</summary><div class="endpoint-body"><p>Lists the caller tenant's subscriptions. Each item can include <code>lastDelivery</code>. Ingest keys and destination URLs are redacted.</p><pre><code>curl {{API_PUBLIC_ORIGIN}}/api/subscriptions \
+  -H "Authorization: Bearer $ACCESS_TOKEN"</code></pre></div></details>
+
+  <details class="endpoint"><summary><span class="method">GET</span><code>/subscriptions/{id}</code> · read</summary><div class="endpoint-body"><p>Returns one redacted subscription and an <code>ETag</code> response header. Save that ETag before a declarative <code>PUT</code>.</p></div></details>
+
+  <details class="endpoint" open><summary><span class="method put">PUT</span><code>/subscriptions/{id}</code> · full replacement</summary><div class="endpoint-body">
+    <p>Replaces every client-configurable field. It requires the exact ETag returned by the latest GET. Omitted optional fields are intentionally cleared.</p>
+<pre><code># 1. Read the current ETag
+curl -sS -D headers.txt -o subscription.json \
+  {{API_PUBLIC_ORIGIN}}/api/subscriptions/$SUB_ID \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+
+# 2. Send the complete desired state
+curl -X PUT {{API_PUBLIC_ORIGIN}}/api/subscriptions/$SUB_ID \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H 'If-Match: "current-etag"' \
+  -H "Content-Type: application/json" \
+  -d @desired-subscription.json</code></pre>
+    <p><span class="status-code">428</span> means the exact <code>If-Match</code> header is missing. <span class="status-code">412</span> means another writer changed the subscription: GET, reconcile, and retry. IDs, organization, API-key hash, and creation time remain server-owned. Platform cannot change because it is part of the ingest URL.</p>
+  </div></details>
+
+  <details class="endpoint"><summary><span class="method patch">PATCH</span><code>/subscriptions/{id}</code> · partial update</summary><div class="endpoint-body"><p>Updates only fields present in the body. Use PATCH for ordinary UI-style edits. Setting one destination clears the previous destination atomically.</p><pre><code>curl -X PATCH {{API_PUBLIC_ORIGIN}}/api/subscriptions/$SUB_ID \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"enabled":false}'</code></pre></div></details>
+
+  <details class="endpoint"><summary><span class="method delete">DELETE</span><code>/subscriptions/{id}</code> · delete</summary><div class="endpoint-body"><p>Deletes a subscription and returns <span class="status-code">204</span>. The audit trail records the deletion.</p></div></details>
+  <details class="endpoint"><summary><span class="method post">POST</span><code>/subscriptions/{id}/test</code> · test delivery</summary><div class="endpoint-body"><p>Sends a synthetic success card through the subscription's actual destination. It bypasses filters so it tests connectivity. The result updates <code>lastDelivery</code>.</p></div></details>
+  <details class="endpoint"><summary><span class="method post">POST</span><code>/subscriptions/{id}/rotate-key</code> · rotate ingest key</summary><div class="endpoint-body"><p>Invalidates the old key and returns a new plaintext key and ingest URL once. Update the sender immediately.</p></div></details>
+
+  <h2 id="monitoring">Health and monitoring</h2>
+  <details class="endpoint"><summary><span class="method">GET</span><code>/health</code> · public liveness</summary><div class="endpoint-body"><p>Returns 200 when the process is alive. It does not check dependencies.</p><pre><code>{"ok":true,"service":"permylastwebhook","version":"…","time":"…"}</code></pre></div></details>
+  <details class="endpoint"><summary><span class="method">GET</span><code>/ready</code> · public readiness</summary><div class="endpoint-body"><p>Returns 200 only when required configuration and Cosmos are ready; otherwise 503 with sanitized named checks. No internal endpoint or SDK error is exposed.</p></div></details>
+  <details class="endpoint" open><summary><span class="method">GET</span><code>/monitoring/status</code> · tenant status</summary><div class="endpoint-body"><p>Authenticated tenant-scoped summary for scripts, Datadog, or Grafana. It contains healthy/failing/unknown/disabled counts and last-delivery outcomes, but no tenant IDs, payloads, keys, ingest URLs, webhook URLs, bot conversation details, or DM identifiers.</p><pre><code>curl {{API_PUBLIC_ORIGIN}}/api/monitoring/status \
+  -H "Authorization: Bearer $ACCESS_TOKEN"</code></pre><p>See <a href="monitoring.html">Monitoring &amp; health</a> for Prometheus and OTLP patterns.</p></div></details>
+
+  <h2 id="webhooks">Webhook ingestion</h2>
+  <h3>Direct ingest (recommended)</h3><pre><code>POST /api/ingest/{orgId}/{subscriptionId}/{platform}?key={subscriptionKey}</code></pre>
+  <p>Use the exact <code>ingestUrl</code> returned on create or key rotation. A direct URL selects one subscription, validates the platform and key, then applies its filters and routing.</p>
+  <h3>Broadcast ingest</h3><pre><code>POST /api/webhooks/{platform}
+x-api-key: {subscriptionKey}
+x-org-id: {organization}</code></pre>
+  <p>For header-capable senders. It fans out to matching enabled subscriptions. Direct ingest is simpler and avoids ambiguous fan-out.</p>
+
+  <h2 id="errors">Errors and retries</h2>
+  <p>Errors use <code>{"error":"message","details":{…}}</code>. Validation details contain field errors, never credentials.</p>
+  <div class="table-wrap"><table><thead><tr><th>Status</th><th>Meaning</th><th>Client action</th></tr></thead><tbody>
+    <tr><td class="status-code">400</td><td>Invalid input or platform mismatch</td><td>Fix the request; do not retry unchanged.</td></tr>
+    <tr><td class="status-code">401</td><td>Missing/invalid identity or API key</td><td>Refresh token or replace the key.</td></tr>
+    <tr><td class="status-code">402</td><td>Plan limit</td><td>Reduce gated configuration or upgrade.</td></tr>
+    <tr><td class="status-code">404</td><td>Resource not found</td><td>Refresh local state.</td></tr>
+    <tr><td class="status-code">409</td><td>State conflict</td><td>Read current state before retrying.</td></tr>
+    <tr><td class="status-code">412 / 428</td><td>Stale or missing PUT precondition</td><td>GET the ETag, reconcile, retry.</td></tr>
+    <tr><td class="status-code">429</td><td>Rate limit</td><td>Wait for <code>Retry-After</code>.</td></tr>
+    <tr><td class="status-code">502</td><td>Teams delivery exhausted retries</td><td>Inspect Last delivery; retry later.</td></tr>
+  </tbody></table></div>
+  <div class="callout tip"><div class="bar">Need a complete schema?</div><div class="inner"><p>Download the live <a href="{{API_PUBLIC_ORIGIN}}/api/openapi.json">OpenAPI document</a>, or email <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a> with an integration question.</p></div></div>
+</main></div></div>
+<div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\API</span><span class="clock">REST: 200 OK</span></div>
+</body></html>

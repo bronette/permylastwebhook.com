@@ -11,10 +11,10 @@
   "RATE_LIMIT_PER_MINUTE": "60",
   "YEAR": "2026",
   "SITE_ORIGIN": "https://permylastwebhook.com",
-  "API_BASE_URL": "https://REPLACE-ME-your-function-app.azurewebsites.net",
-  "API_PUBLIC_ORIGIN": "https://api.permylastwebhook.com",
+  "API_BASE_URL": "https://tdckbprod-flex-prod.azurewebsites.net",
+  "API_PUBLIC_ORIGIN": "https://tdckbprod-flex-prod.azurewebsites.net",
   "GITHUB_APP_URL": "https://github.com/bronette/permylastwebhook",
   "GITHUB_SITE_URL": "https://github.com/bronette/permylastwebhook.com",
-  "INSTALL_URL": "https://teams.microsoft.com/l/app/REPLACE-ME-APP-ID",
+  "INSTALL_URL": "https://permylastwebhook.com/docs/getting-started.html",
   "PRIVACY_URL": "https://permylastwebhook.com/privacy/"
 }

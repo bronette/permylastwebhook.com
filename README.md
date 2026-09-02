@@ -10,8 +10,9 @@ company logo, hosted on cPanel (Namecheap) at https://permylastwebhook.com.
 ## What's on the site
 
 - **Landing page** (`site/index.html`) — the pitch, feature grid, install CTA, About.
-- **Docs** (`site/docs/`) — getting-started onboarding, a per-platform reference,
-  a features guide, pricing, an FAQ, and an "Office 365 Connectors migration" guide.
+- **Docs** (`site/docs/`) — getting-started onboarding, platform and feature guides,
+  a complete REST API reference, monitoring/OpenTelemetry/Prometheus guidance,
+  end-to-end troubleshooting, pricing, FAQ, and Office 365 Connectors migration.
 - **Integrations** (`site/integrations/`) — a hub plus **one SEO landing page per
   source** (GitHub, GitLab, Jenkins, Argo CD, Datadog, PagerDuty, … 16 in all + generic),
   each targeting "<platform> Teams notifications" search intent. **Generated** — edit the
@@ -48,9 +49,10 @@ website-assets/           original company logo (brand source of truth)
 npm run site:build      # regenerate integration pages + sitemap, then resolve {{TOKEN}}s into site-dist/
 ```
 
-`site:build` runs three steps: `gen-integration-pages.mjs` → `gen-sitemap.mjs` →
-`fill-site-placeholders.mjs`. The scripts are dependency-free (pure Node built-ins), so no
-`npm install` is needed. `site-dist/` is the publishable output (gitignored). Preview:
+`site:build` runs four steps: `gen-integration-pages.mjs` → `gen-sitemap.mjs` →
+`fill-site-placeholders.mjs` → `validate-site.mjs`. The scripts are dependency-free (pure Node built-ins), so no
+`npm install` is needed. The build also validates HTML metadata, placeholders, internal
+links, anchors, and duplicate IDs. `site-dist/` is the publishable output (gitignored). Preview:
 `cd site-dist && npx serve .`
 
 ## Deploy (cPanel over SFTP)

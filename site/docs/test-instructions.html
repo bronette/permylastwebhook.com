@@ -29,12 +29,13 @@
       <li><a href="platforms.html">Platform reference</a></li>
       <li><a href="features.html">Features</a></li>
       <li><a href="pricing.html">Pricing &amp; plans</a></li>
+      <li><a href="monitoring.html">Monitoring &amp; health</a></li>
       <li><a href="admin-consent.html">Admin consent</a></li>
     </ul>
     <div class="side-title">Help</div>
     <ul>
       <li><a href="faq.html">FAQ</a></li>
-      <li><a href="getting-started.html#trouble">Troubleshooting</a></li>
+      <li><a href="troubleshooting.html">Troubleshooting</a></li>
       <li><a href="test-instructions.html" class="active">Store test instructions</a></li>
     </ul>
   </aside>
@@ -59,9 +60,12 @@
       <li>Open Microsoft Teams → <strong>Apps</strong> → search <em>Per My Last Webhook</em> → <strong>Add</strong>
       (or use the <a href="/#install">install link</a> from our website).</li>
       <li>Complete <strong>admin consent</strong> when prompted. See <a href="admin-consent.html">admin consent</a> if needed.</li>
-      <li>Open the app. Confirm the <strong>Subscriptions</strong> tab loads and you can sign in with SSO.</li>
+      <li>Open the app. Confirm the <strong>Setup</strong> tab loads without sign-in, then open
+      <strong>Subscriptions</strong> and sign in with SSO.</li>
     </ol>
-    <p><strong>Expected:</strong> No "not installed" or AADSTS consent errors. The Diagnostics tab reports all checks green.</p>
+    <p><strong>Expected:</strong> No "not installed" or AADSTS consent errors. From the
+    <strong>Subscriptions</strong> tab, click <strong>Diagnostics</strong> in the top nav —
+    all checks report green. (Diagnostics is a page inside the admin UI, not a separate Teams tab.)</p>
 
     <h2>2 · Create a subscription</h2>
     <ol>
@@ -87,7 +91,8 @@
 
     <h2>5 · Audit and uninstall</h2>
     <ol>
-      <li>Open the <strong>Audit log</strong> tab — subscription creation should be recorded with your UPN.</li>
+      <li>From <strong>Subscriptions</strong>, click <strong>Audit log</strong> in the top nav —
+      subscription creation should be recorded with your UPN.</li>
       <li>Delete the test subscription.</li>
       <li>To fully remove the app: Entra admin center → Enterprise applications → remove <em>Per My Last Webhook</em>.</li>
     </ol>
@@ -95,7 +100,8 @@
 
     <h2>Support during review</h2>
     <p>If validation fails, email <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a> with your tenant id,
-    the failing step, and a screenshot of the Diagnostics tab. Security: <a href="mailto:{{SECURITY_CONTACT_EMAIL}}">{{SECURITY_CONTACT_EMAIL}}</a>.</p>
+    the failing step, and a screenshot of the Diagnostics page (Subscriptions tab → Diagnostics in the nav).
+    Security: <a href="mailto:{{SECURITY_CONTACT_EMAIL}}">{{SECURITY_CONTACT_EMAIL}}</a>.</p>
 
     <div class="callout note"><div class="bar">Related links</div><div class="inner"><p>
     <a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Service</a> ·

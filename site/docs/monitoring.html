@@ -1,0 +1,82 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Monitoring and health — Per My Last Webhook docs</title><meta name="description" content="Monitor Per My Last Webhook with health probes, tenant delivery status, Prometheus blackbox exporter, OpenTelemetry, Grafana, and Azure Monitor." />
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32" /><link rel="stylesheet" href="../styles.css" /><link rel="stylesheet" href="docs.css" /></head><body>
+<header class="site-header"><a class="brand" href="/"><img src="../logo-mark.svg" alt="" width="32" height="32" /><span>Per My Last Webhook</span></a><nav class="site-nav"><a href="/#features">Features</a><a href="/docs/">Docs</a><a href="/#install">Install</a><a href="/validator/">Validator</a><a class="nav-cta" href="{{GITHUB_APP_URL}}">GitHub</a></nav></header>
+<div class="docs-shell"><div class="docs-layout"><aside class="docs-sidebar">
+<div class="side-title">Start here</div><ul><li><a href="/docs/">Docs home</a></li><li><a href="getting-started.html">Getting started</a></li></ul>
+<div class="side-title">Guides</div><ul><li><a href="platforms.html">Platform reference</a></li><li><a href="features.html">Features</a></li><li><a class="active" href="monitoring.html">Monitoring &amp; health</a></li></ul>
+<div class="side-title">API</div><ul><li><a href="api-reference.html">REST API reference</a></li><li><a href="{{API_PUBLIC_ORIGIN}}/api/openapi.json">OpenAPI 3.1 JSON</a></li></ul>
+<div class="side-title">Help</div><ul><li><a href="troubleshooting.html">Troubleshooting</a></li><li><a href="faq.html">FAQ</a></li></ul></aside>
+<main class="docs-content"><div class="crumbs"><a href="/docs/">Docs</a> / Monitoring</div><h1>Monitoring and health</h1>
+<p class="lede">Choose the signal that matches your responsibility: public uptime, your tenant's delivery state, or full self-hosted telemetry.</p>
+
+<div class="table-wrap"><table><thead><tr><th>Need</th><th>Use</th><th>Authentication</th></tr></thead><tbody>
+<tr><td>Is the process reachable?</td><td><code>GET /api/health</code></td><td>None</td></tr>
+<tr><td>Can it serve real traffic?</td><td><code>GET /api/ready</code></td><td>None</td></tr>
+<tr><td>Are my subscriptions delivering?</td><td><code>GET /api/monitoring/status</code></td><td>Entra management token</td></tr>
+<tr><td>Full traces, metrics, logs</td><td>Azure Monitor and optional OTLP</td><td>Self-hosted operator configuration</td></tr>
+</tbody></table></div>
+
+<h2>Hosted customers</h2><h3>Public uptime probes</h3>
+<pre><code>curl -fsS {{API_PUBLIC_ORIGIN}}/api/health
+curl -fsS {{API_PUBLIC_ORIGIN}}/api/ready</code></pre>
+<p><code>/health</code> is liveness only. Use <code>/ready</code> for alerting because it also checks required configuration and Cosmos. Both responses are payload-free, sanitized, and marked <code>Cache-Control: no-store</code>.</p>
+
+<h3>Tenant delivery status</h3><pre><code>curl -fsS {{API_PUBLIC_ORIGIN}}/api/monitoring/status \
+  -H "Authorization: Bearer $ACCESS_TOKEN"</code></pre>
+<p>The response aggregates healthy, failing, unknown, and disabled subscriptions and includes each subscription's last delivery. <code>unknown</code> means no retained delivery result yet—not a failure. See the <a href="api-reference.html#monitoring">response contract</a>.</p>
+
+<h3>Prometheus blackbox exporter</h3><p>There is intentionally no shared public <code>/metrics</code> endpoint: global labels could reveal other tenants' volume, platforms, failures, or capacity. Probe readiness safely instead:</p>
+<pre><code>scrape_configs:
+  - job_name: permylastwebhook-ready
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets: [{{API_PUBLIC_ORIGIN}}/api/ready]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115</code></pre>
+<p>Alert when <code>probe_success == 0</code> for three consecutive probes. Never place an ingest key in a Prometheus target URL.</p>
+
+<h2>Self-hosted OpenTelemetry</h2><p>Application Insights v3 provides the primary OpenTelemetry pipeline. Add an outbound OTLP/HTTP exporter without disabling Azure Monitor:</p>
+<pre><code>OTEL_EXPORTER_OTLP_ENDPOINT=https://collector.example:4318
+OTEL_EXPORTER_OTLP_HEADERS=Authorization=Bearer%20&lt;token&gt;</code></pre>
+<p>The base endpoint expands to <code>/v1/traces</code>, <code>/v1/metrics</code>, and <code>/v1/logs</code>. Signal-specific variables override it:</p>
+<pre><code>OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://collector.example:4318/v1/traces
+OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=https://collector.example:4318/v1/metrics
+OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=https://collector.example:4318/v1/logs
+OTEL_EXPORTER_OTLP_METRICS_HEADERS=Authorization=Bearer%20metrics-token</code></pre>
+<div class="callout warn"><div class="bar">Credential rules</div><div class="inner"><p>Remote collectors must use HTTPS. HTTP is accepted only for loopback collectors. Put credentials in percent-encoded headers stored in Key Vault—not URL userinfo, query strings, source, or logs.</p></div></div>
+
+<h3>OTel Collector to Prometheus</h3><pre><code>receivers:
+  otlp:
+    protocols:
+      http:
+
+exporters:
+  prometheus:
+    endpoint: 0.0.0.0:8889
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]</code></pre>
+<p>Point the app at the collector's HTTPS OTLP receiver, then configure Prometheus to scrape <code>otel-collector:8889</code>. Discover metric names from the collector because SDK versions can change them.</p>
+
+<h2>Recommended alerts</h2><div class="table-wrap"><table><thead><tr><th>Condition</th><th>Window</th><th>Action</th></tr></thead><tbody>
+<tr><td>Readiness probe fails</td><td>3 consecutive probes</td><td>Check Azure status, deployment, and Cosmos.</td></tr>
+<tr><td>Tenant status is degraded</td><td>2 polls</td><td>Inspect failing subscriptions and Last delivery.</td></tr>
+<tr><td>HTTP 5xx &gt; 1%</td><td>15 minutes</td><td>Correlate requests, exceptions, and deployment.</td></tr>
+<tr><td>Teams dependency failures &gt; 5%</td><td>15 minutes</td><td>Check Microsoft service health and destination validity.</td></tr>
+<tr><td>Cosmos throttling &gt; 0</td><td>5 minutes</td><td>Inspect RU per request and burst shape.</td></tr>
+</tbody></table></div>
+
+<h2>Telemetry troubleshooting</h2><ul><li>Azure Monitor works but collector is empty: confirm OTLP/<strong>HTTP</strong>, TLS trust, header encoding, and all <code>/v1/*</code> paths.</li><li>Only one signal is missing: check that signal's endpoint and header override.</li><li>An invalid exporter endpoint disables that exporter without taking down the app or Application Insights.</li><li>Do not use org IDs, destination URLs, keys, approval tokens, Redis URLs, or payload fields as labels or span attributes.</li></ul>
+<div class="callout tip"><div class="bar">Delivery problem?</div><div class="inner"><p>Monitoring says degraded? Follow the <a href="troubleshooting.html">end-to-end troubleshooting decision tree</a>.</p></div></div>
+</main></div></div><div class="taskbar"><span class="start">▣ Start</span><span class="seg">PER MY LAST WEBHOOK</span><span class="seg">C:\DOCS\MONITORING</span><span class="clock">Health: OK</span></div></body></html>
