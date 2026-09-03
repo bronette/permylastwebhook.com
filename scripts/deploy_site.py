@@ -10,6 +10,7 @@ email). No secrets live in this file. Usage:
 from __future__ import annotations
 
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -43,7 +44,9 @@ def scan_placeholders(root: Path) -> list[tuple[str, int]]:
         except UnicodeDecodeError:
             continue
         for i, line in enumerate(text.splitlines(), 1):
-            if "REPLACE-ME" in line:
+            if "{{" in line and re.search(r"\{\{[A-Z]", line):
+                hits.append((p.relative_to(root).as_posix(), i))
+            elif re.search(r"REPLACE-ME[-\w]", line):
                 hits.append((p.relative_to(root).as_posix(), i))
     return hits
 
